@@ -56,7 +56,7 @@ class MoviesViewModel(
                         }.onFailure {
                             errorLiveData.postValue(it.message)
                         }.onSuccess {
-                            totalNumberOfPages = it.body()?.totalPages ?: 0
+                            totalNumberOfPages = it.body()?.totalPages ?: 1
                             currentPage = it.body()?.page ?: 0
                             it.body()?.results?.let {
                                 movies.addAll(it)
@@ -65,7 +65,6 @@ class MoviesViewModel(
                         }
                     } else {
                         errorLiveData.postValue(" No internet connection")
-                        isLoadingMoviesLiveData.postValue(false)
                     }
                 }
             }
@@ -86,17 +85,17 @@ class MoviesViewModel(
     suspend fun onMovieClicked(movieEntry: MovieResult) {
         if (hasInternetConnection()) {
             kotlin.runCatching {
-                setLoading(true)
+                isLoadingMovieInfoLiveData.postValue(true)
                 getMovieInfoAndCredits(movieEntry)
             }.onSuccess {
-                setLoading(false)
+                isLoadingMovieInfoLiveData.postValue(false)
             }.onFailure {
-                setLoading(false)
+                isLoadingMovieInfoLiveData.postValue(false)
                 errorLiveData.postValue(it.message)
             }
         } else {
+            movieCreditsAndInfoLiveData.postValue(null)
             errorLiveData.postValue("no internet connection")
-            setLoading(false)
         }
     }
 
@@ -112,10 +111,6 @@ class MoviesViewModel(
                 movieCreditsAndInfoLiveData.postValue(it.body())
             }
         }
-    }
-
-    private fun setLoading(loading: Boolean) {
-        isLoadingMovieInfoLiveData.postValue(loading)
     }
 }
 

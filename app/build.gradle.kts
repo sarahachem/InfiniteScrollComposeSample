@@ -65,12 +65,9 @@ dependencies {
     implementation("com.google.accompanist:accompanist-coil:0.8.1")
     implementation("com.google.accompanist:accompanist-insets:0.8.1")
     implementation("com.google.accompanist:accompanist-swiperefresh:0.8.1")
-    implementation("androidx.work:work-runtime:2.5.0")
-    implementation("androidx.work:work-runtime-ktx:2.5.0")
     implementation("joda-time:joda-time:2.9.9")
 
     testImplementation("junit:junit:4.+")
-    androidTestImplementation("androidx.test.ext:junit:1.1.2")
 }
 
 fun loadCustomProperties(file: File): java.util.Properties {
