@@ -17,6 +17,7 @@ internal object ThemeColorAlias {
     val onClickMain = ThemedColor(light = ColorAlias.lightGrey, dark = ColorAlias.lightGrey)
     val divider = ThemedColor(light = ColorAlias.veryLightGrey, dark = ColorAlias.grey)
     val theme = ThemedColor(light = ColorAlias.cyan, dark = ColorAlias.cyan)
+    val iconMain = ThemedColor(light = ColorAlias.lightblue, dark = ColorAlias.lightblue)
 }
 
 private object ColorAlias {
@@ -29,5 +30,6 @@ private object ColorAlias {
     val blue = Color(0xff0009A9)
     val red = Color(0xffD93421)
     val cyan = Color(0xff5CB2CC)
+    val lightblue = Color(0XFF00B3E5)
 }
     

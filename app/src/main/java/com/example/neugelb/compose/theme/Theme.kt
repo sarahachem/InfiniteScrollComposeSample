@@ -27,6 +27,7 @@ private val LightColorPalette = ColorPalette(
     actionPrimary = ThemeColorAlias.actionMain.light,
     onActionPrimary = ThemeColorAlias.onClickMain.light,
     actionPrimaryDisabled = ThemeColorAlias.actionMainDisabled.light,
+    iconMain = ThemeColorAlias.iconMain.light,
 )
 
 private val DarkColorPalette = ColorPalette(
@@ -37,7 +38,8 @@ private val DarkColorPalette = ColorPalette(
     actionPrimary = ThemeColorAlias.actionMain.dark,
     onActionPrimary = ThemeColorAlias.onClickMain.dark,
     actionPrimaryDisabled = ThemeColorAlias.actionMainDisabled.dark,
-)
+    iconMain = ThemeColorAlias.iconMain.dark,
+    )
 
 private val MaterialLightPalette = lightColors(
     primary = ThemeColorAlias.backgroundMain.light,
@@ -133,6 +135,7 @@ class ColorPalette(
     actionPrimary: Color,
     onActionPrimary: Color,
     actionPrimaryDisabled: Color,
+    iconMain: Color
 ) {
     var textPrimary by mutableStateOf(textPrimary)
         private set
@@ -148,6 +151,8 @@ class ColorPalette(
         private set
     var mainColorDisabled by mutableStateOf(actionPrimaryDisabled)
         private set
+    var iconMain by mutableStateOf(iconMain)
+        private set
 
     fun update(other: ColorPalette) {
         textPrimary = other.textPrimary
@@ -156,6 +161,7 @@ class ColorPalette(
         mainColor = other.mainColor
         onClick = other.onClick
         mainColorDisabled = other.mainColorDisabled
+        iconMain = other.iconMain
     }
 }
 

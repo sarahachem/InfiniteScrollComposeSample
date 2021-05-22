@@ -3,6 +3,7 @@ package com.example.neugelb.ui
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,16 +12,18 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.example.neugelb.R
-import com.example.neugelb.compose.component.text.BodyText
+import com.example.neugelb.compose.component.LabelIconCell
 import com.example.neugelb.compose.component.MovieCard
 import com.example.neugelb.compose.theme.NeugelbTheme
 import com.example.neugelb.compose.theme.TwelveDp
@@ -61,27 +64,36 @@ fun Movies(
                 val groupedMovies = movies?.groupBy { it.releaseDate }
                 groupedMovies?.forEach { (date, movie) ->
                     stickyHeader {
-                        BodyText(
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(NeugelbTheme.colors.divider)
-                                .padding(TwelveDp),
-                            text = stringResource(R.string.release_date) + " $date"
-                        )
+                        Row {
+                            LabelIconCell(
+                                icon = {
+                                    Icon(
+                                        modifier = Modifier.fillMaxSize(0.3f),
+                                        painter = painterResource(id = R.drawable.ic_tmdb),
+                                        contentDescription = null,
+                                        tint = NeugelbTheme.colors.iconMain
+                                    )
+                                },
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(NeugelbTheme.colors.divider)
+                                    .padding(TwelveDp),
+                                text = stringResource(R.string.release_date) + " $date"
+                            )
+                        }
                     }
                     itemsIndexed(movie) { index, item ->
                         MovieCard(
                             modifier = Modifier.padding(horizontal = TwentyFourDp),
                             title = item.title,
                             url = item.posterPath,
-                            enabled =  state.isScrollInProgress.not(),
+                            enabled = state.isScrollInProgress.not(),
                             onMovieClicked = {
                                 scope.launch {
                                     if (isLoadingMovieInfo?.not() == true) {
                                         viewModel.onMovieClicked(item)
                                         bottomSheetState.show()
-
                                         movies?.takeIf { it.indexOf(item) < it.lastIndex }?.let {
                                             state.animateScrollToItem(
                                                 //take sticky headers into account
