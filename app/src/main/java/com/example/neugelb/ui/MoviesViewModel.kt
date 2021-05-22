@@ -14,6 +14,7 @@ import com.example.neugelb.apis.checkSuccessful
 import com.example.neugelb.model.InfoAndCredits
 import com.example.neugelb.model.MovieResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -42,8 +43,9 @@ class MoviesViewModel(
 
     fun fetchMovies() {
         val movies = moviesLiveData.value?.toMutableList() ?: mutableListOf()
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (currentPage == 0) {
+                delay(400)
                 isLoadingMoviesLiveData.postValue(true)
             }
             if (currentPage < totalNumberOfPages) {
