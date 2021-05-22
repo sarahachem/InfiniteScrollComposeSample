@@ -75,6 +75,7 @@ fun Movies(
                             modifier = Modifier.padding(horizontal = TwentyFourDp),
                             title = item.title,
                             url = item.posterPath,
+                            enabled =  state.isScrollInProgress.not(),
                             onMovieClicked = {
                                 scope.launch {
                                     if (isLoadingMovieInfo?.not() == true) {

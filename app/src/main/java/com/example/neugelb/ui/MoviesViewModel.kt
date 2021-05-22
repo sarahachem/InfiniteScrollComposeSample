@@ -1,6 +1,8 @@
 package com.example.neugelb.ui
 
 import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,7 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MoviesViewModel(
-    app: Application,
+    val app: Application,
 ) : AndroidViewModel(app) {
 
     var errorLiveData = mutableLiveDataOf("")
@@ -46,19 +48,24 @@ class MoviesViewModel(
             }
             if (currentPage < totalNumberOfPages) {
                 withContext(Dispatchers.IO) {
-                    kotlin.runCatching {
-                        ApiBuilders.getTMDBApi().getMovies(
-                            BuildConfig.TMDB_API_KEY, currentPage + 1
-                        ).execute().checkSuccessful()
-                    }.onFailure {
-                        errorLiveData.postValue(it.message)
-                    }.onSuccess {
-                        totalNumberOfPages = it.body()?.totalPages ?: 0
-                        currentPage = it.body()?.page ?: 0
-                        it.body()?.results?.let {
-                            movies.addAll(it)
-                            moviesLiveData.postValue(movies)
+                    if (hasInternetConnection()) {
+                        kotlin.runCatching {
+                            ApiBuilders.getTMDBApi().getMovies(
+                                BuildConfig.TMDB_API_KEY, currentPage + 1
+                            ).execute().checkSuccessful()
+                        }.onFailure {
+                            errorLiveData.postValue(it.message)
+                        }.onSuccess {
+                            totalNumberOfPages = it.body()?.totalPages ?: 0
+                            currentPage = it.body()?.page ?: 0
+                            it.body()?.results?.let {
+                                movies.addAll(it)
+                                moviesLiveData.postValue(movies)
+                            }
                         }
+                    } else {
+                        errorLiveData.postValue(" No internet connection")
+                        isLoadingMoviesLiveData.postValue(false)
                     }
                 }
             }
@@ -68,15 +75,28 @@ class MoviesViewModel(
         }
     }
 
+    private fun hasInternetConnection(): Boolean {
+        val cm: ConnectivityManager =
+            app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = cm.activeNetworkInfo;
+        val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting;
+        return isConnected;
+    }
+
     suspend fun onMovieClicked(movieEntry: MovieResult) {
-        kotlin.runCatching {
-            setLoading(true)
-            getMovieInfoAndCredits(movieEntry)
-        }.onSuccess {
+        if (hasInternetConnection()) {
+            kotlin.runCatching {
+                setLoading(true)
+                getMovieInfoAndCredits(movieEntry)
+            }.onSuccess {
+                setLoading(false)
+            }.onFailure {
+                setLoading(false)
+                errorLiveData.postValue(it.message)
+            }
+        } else {
+            errorLiveData.postValue("no internet connection")
             setLoading(false)
-        }.onFailure {
-            setLoading(false)
-            errorLiveData.postValue(it.message)
         }
     }
 

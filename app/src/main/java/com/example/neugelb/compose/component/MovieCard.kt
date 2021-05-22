@@ -23,13 +23,14 @@ fun MovieCard(
     modifier: Modifier = Modifier,
     title: String,
     url: String?,
+    enabled: Boolean = false,
     onMovieClicked: (() -> Unit)? = null,
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = TwentyFourDp, vertical = TwelveDp)
-            .clickable(enabled = onMovieClicked != null) { onMovieClicked?.invoke() },
+            .clickable(enabled = enabled) { onMovieClicked?.invoke() },
         shape = MaterialTheme.shapes.large,
         elevation = 0.dp,
     ) {
