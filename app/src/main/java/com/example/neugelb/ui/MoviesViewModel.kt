@@ -69,7 +69,7 @@ class MoviesViewModel(
                     }
                 }
             }
-            if (currentPage == 1) {
+            if (isLoadingMoviesLiveData.value == true) {
                 isLoadingMoviesLiveData.postValue(false)
             }
         }

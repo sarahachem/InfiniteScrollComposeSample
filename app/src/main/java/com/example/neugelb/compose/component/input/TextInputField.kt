@@ -35,11 +35,13 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import com.example.neugelb.compose.component.text.ContentText
+import com.example.neugelb.compose.component.text.SecondaryText
 import com.example.neugelb.compose.theme.DarkThemePreviewParamProvider
 import com.example.neugelb.compose.theme.EightDp
 import com.example.neugelb.compose.theme.SixteenDp
@@ -139,7 +141,7 @@ fun FormInputField(
     type: InputType,
     label: String? = null,
     text: String = "",
-    hintText: AnnotatedString? = null,
+    hintText: String? = null,
     placeHolder: String = "",
     isError: Boolean = false,
     focusRequester: FocusRequester = FocusRequester(),
@@ -165,6 +167,14 @@ fun FormInputField(
             onFocusChange = onFocusChange,
             enabled = enabled
         )
+        hintText?.takeIf { it.trim().isNotEmpty() }?.let {
+            Spacer(Modifier.height(EightDp))
+            SecondaryText(
+                textAlign = TextAlign.Start,
+                text = it,
+                color = if (isError) MaterialTheme.colors.error else NeugelbTheme.colors.textSecondary,
+            )
+        }
     }
 }
 

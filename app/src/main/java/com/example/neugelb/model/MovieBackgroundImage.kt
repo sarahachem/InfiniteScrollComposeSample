@@ -27,8 +27,7 @@ fun MovieBackgroundImage(
     title: String,
     url: String?,
     backgroundColor: Color = MaterialTheme.colors.surface,
-    textColor: Color = MaterialTheme.colors.onSurface,
-    forceRefresh: Boolean = false,
+    textColor: Color = MaterialTheme.colors.onSurface
 ) {
     Box(modifier = modifier.background(color = backgroundColor)) {
         val painter =
@@ -36,8 +35,7 @@ fun MovieBackgroundImage(
                 request = POSTER_PATH_URL_API + url,
                 fadeIn = true,
                 requestBuilder = {
-                    val cachePolicy =
-                        if (forceRefresh) CachePolicy.WRITE_ONLY else CachePolicy.ENABLED
+                    val cachePolicy = CachePolicy.ENABLED
                     diskCachePolicy(cachePolicy)
                     memoryCachePolicy(cachePolicy)
                     networkCachePolicy(CachePolicy.ENABLED)

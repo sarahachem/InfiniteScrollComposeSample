@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
@@ -83,12 +84,12 @@ fun Movies(
                             )
                         }
                     }
-                    itemsIndexed(movie) { index, item ->
+                    items(movie) { item ->
                         MovieCard(
                             modifier = Modifier.padding(horizontal = TwentyFourDp),
                             title = item.title,
                             url = item.posterPath,
-                            enabled = state.isScrollInProgress.not(),
+                            enabled = isLoadingMovies == false && state.isScrollInProgress.not(),
                             onMovieClicked = {
                                 scope.launch {
                                     if (isLoadingMovieInfo?.not() == true) {

@@ -8,19 +8,25 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
+import com.example.neugelb.compose.component.input.FormInputField
+import com.example.neugelb.compose.component.input.InputType
 import com.example.neugelb.compose.component.text.BodyText
 import com.example.neugelb.compose.component.text.ContentText
 import com.example.neugelb.compose.component.text.SecondaryText
+import com.example.neugelb.compose.theme.DarkThemePreviewParamProvider
 import com.example.neugelb.compose.theme.NeugelbTheme
 import com.example.neugelb.compose.theme.SixteenDp
 
@@ -118,5 +124,17 @@ fun constraints(): ConstraintSet {
             centerVerticallyTo(parent)
             width = Dimension.preferredWrapContent
         }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Preview(name = "SampleInputField", showBackground = true)
+@Composable
+fun SampleLabelValueCell(@PreviewParameter(DarkThemePreviewParamProvider::class) isDarkTheme: Boolean) {
+    NeugelbTheme(darkTheme = isDarkTheme) {
+        LabelValueCell(
+            labelText = "I'm the label",
+            valueText = "I'm the text"
+        )
     }
 }

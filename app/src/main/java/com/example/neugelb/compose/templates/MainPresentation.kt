@@ -14,11 +14,8 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.google.accompanist.insets.ProvideWindowInsets
-import com.google.accompanist.insets.statusBarsPadding
 
 @ExperimentalMaterialApi
 @OptIn(ExperimentalAnimatedInsets::class)
@@ -36,7 +33,7 @@ fun MainLayoutWithBottomSheet(
                 state = sheetState,
                 content = sheetContent
             ) {
-                MainPresentationScaffold(
+                MainPresentationLayout(
                     bodyContentPadding = bodyContentPadding,
                     bodyContent = bodyContent
                 )
@@ -46,7 +43,7 @@ fun MainLayoutWithBottomSheet(
 }
 
 @Composable
-private fun MainPresentationScaffold(
+private fun MainPresentationLayout(
     contentModifier: Modifier = Modifier,
     bodyContentPadding: PaddingValues = PaddingValues(),
     bodyContent: @Composable ColumnScope.() -> Unit

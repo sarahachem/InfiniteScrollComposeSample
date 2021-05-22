@@ -1,0 +1,127 @@
+{
+    "adult": false,
+    "backdrop_path": "/1C7OJjGDnrFUGQIrXVy96Kbdp5h.jpg",
+    "belongs_to_collection": null,
+    "budget": 0,
+    "genres": [
+        {
+            "id": 99,
+            "name": "Documentary"
+        },
+        {
+            "id": 10402,
+            "name": "Music"
+        }
+    ],
+    "homepage": "https://amazon.com/dp/B08ZJ5QLYZ",
+    "id": 807597,
+    "imdb_id": "tt14264844",
+    "original_language": "en",
+    "original_title": "P!nk: All I Know So Far",
+    "overview": "A behind-the-scenes look at P!NK as she balances family and life on the road, leading up to her first Wembley Stadium performance on 2019's \"Beautiful Trauma\" world tour.",
+    "popularity": 35.55,
+    "poster_path": "/3V5OGAgVuy8ugfJHwM5AlvFAky2.jpg",
+    "production_companies": [
+        {
+            "id": 154628,
+            "logo_path": null,
+            "name": "Lefty Paw Print",
+            "origin_country": ""
+        }
+    ],
+    "production_countries": [
+        {
+            "iso_3166_1": "US",
+            "name": "United States of America"
+        }
+    ],
+    "release_date": "2021-05-21",
+    "revenue": 0,
+    "runtime": 99,
+    "spoken_languages": [
+        {
+            "english_name": "English",
+            "iso_639_1": "en",
+            "name": "English"
+        }
+    ],
+    "status": "Released",
+    "tagline": "",
+    "title": "P!nk: All I Know So Far",
+    "video": false,
+    "vote_average": 9.0,
+    "vote_count": 2,
+    "credits": {
+        "cast": [
+            {
+                "adult": false,
+                "gender": 1,
+                "id": 77271,
+                "known_for_department": "Acting",
+                "name": "Pink",
+                "original_name": "Pink",
+                "popularity": 1.4,
+                "profile_path": "/kRSHST66hj4B6KVuXBJzi6Q0jy3.jpg",
+                "cast_id": 2,
+                "character": "",
+                "credit_id": "60554ccb4083b3006bd14134",
+                "order": 1
+            }
+        ],
+        "crew": [
+            {
+                "adult": false,
+                "gender": 2,
+                "id": 1276373,
+                "known_for_department": "Directing",
+                "name": "Michael Gracey",
+                "original_name": "Michael Gracey",
+                "popularity": 1.38,
+                "profile_path": "/aPfUH7DbWh7wxzylql5yD34S9g2.jpg",
+                "credit_id": "60554c4de16e5a003c6697fd",
+                "department": "Directing",
+                "job": "Director"
+            },
+            {
+                "adult": false,
+                "gender": 2,
+                "id": 1276373,
+                "known_for_department": "Directing",
+                "name": "Michael Gracey",
+                "original_name": "Michael Gracey",
+                "popularity": 1.38,
+                "profile_path": "/aPfUH7DbWh7wxzylql5yD34S9g2.jpg",
+                "credit_id": "60a7b50c142ef10040f11649",
+                "department": "Production",
+                "job": "Producer"
+            },
+            {
+                "adult": false,
+                "gender": 0,
+                "id": 1396671,
+                "known_for_department": "Directing",
+                "name": "David Spearing",
+                "original_name": "David Spearing",
+                "popularity": 0.6,
+                "profile_path": null,
+                "credit_id": "60a7b5807dfda6007af127bc",
+                "department": "Crew",
+                "job": "Cinematography"
+            }
+        ]
+    },
+    "videos": {
+        "results": [
+            {
+                "id": "60a7b397142ef10057b46d57",
+                "iso_639_1": "en",
+                "iso_3166_1": "US",
+                "key": "EWcuGM8zjh0",
+                "name": "PINK All I Know So Far - Official Trailer | Prime Video",
+                "site": "YouTube",
+                "size": 1080,
+                "type": "Trailer"
+            }
+        ]
+    }
+}

@@ -44,9 +44,8 @@ fun MovieInfoBottomSheet(
             )
         }
 
-        val actors = info?.credits?.cast?.filter { it.known_for_department == "Acting" }
-
-        actors?.takeIf { it.isNotEmpty() }?.subList(0, if (actors.size > 5) 5 else actors.size)
+        val actors = info?.credits?.cast?.takeIf { it.isNotEmpty() }
+        actors?.subList(0, if (actors.size > 6) 5 else actors.size)
             ?.let {
                 LabelValueCell(
                     labelText = stringResource(id = R.string.cast),
@@ -57,21 +56,15 @@ fun MovieInfoBottomSheet(
                 )
             }
 
-        val directors = info?.credits?.cast?.filter { it.known_for_department == "Directing" }
-            ?.distinctBy { it.original_name }?.map { it.original_name }?.takeIf { it.isNotEmpty() }
-            ?: info?.credits?.crew?.filter { it.known_for_department == "Directing" }
-                ?.distinctBy { it.original_name }
-                ?.map { it.original_name }
-
-        directors?.takeIf { it.isNotEmpty() }
-            ?.subList(0, if (directors.size > 3) 2 else directors.size)?.let {
-                LabelValueCell(
-                    labelText = stringResource(id = R.string.directors),
-                    modifier = Modifier.padding(horizontal = TwentyFourDp, vertical = EightDp),
-                    valueText = it.joinToString(", "),
-                    bottomDivider = true
-                )
-            }
+        val directors = info?.credits?.crew?.filter { it.job == "Director" }
+        directors?.takeIf { it.isNotEmpty() }?.let {
+            LabelValueCell(
+                labelText = stringResource(id = R.string.directors),
+                modifier = Modifier.padding(horizontal = TwentyFourDp, vertical = EightDp),
+                valueText = it.joinToString(", ") { it.name },
+                bottomDivider = true
+            )
+        }
 
         LabelValueCell(
             labelText = stringResource(id = R.string.rating),
