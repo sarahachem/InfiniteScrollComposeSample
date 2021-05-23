@@ -65,30 +65,13 @@ fun Movies(
                 val groupedMovies = movies?.groupBy { it.releaseDate }
                 groupedMovies?.forEach { (date, movie) ->
                     stickyHeader {
-                        Row {
-                            LabelIconCell(
-                                icon = {
-                                    Icon(
-                                        modifier = Modifier.fillMaxSize(0.3f),
-                                        painter = painterResource(id = R.drawable.ic_tmdb),
-                                        contentDescription = null,
-                                        tint = NeugelbTheme.colors.iconMain
-                                    )
-                                },
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(NeugelbTheme.colors.divider)
-                                    .padding(TwelveDp),
-                                text = stringResource(R.string.release_date) + " $date"
-                            )
-                        }
+                        StickyHeaderRow(date)
                     }
                     items(movie) { item ->
                         MovieCard(
                             modifier = Modifier.padding(horizontal = TwentyFourDp),
                             title = item.title,
-                            url = item.posterPath,
+                            url = item.posterPath ?: item.backdropPath,
                             enabled = isLoadingMovies == false && state.isScrollInProgress.not(),
                             onMovieClicked = {
                                 scope.launch {
@@ -115,5 +98,27 @@ fun Movies(
         }
         if (isLoadingMovieInfo == true || isLoadingMovies == true)
             CircularProgressIndicator(color = NeugelbTheme.colors.mainColor)
+    }
+}
+
+@Composable
+fun StickyHeaderRow(date: String) {
+    Row {
+        LabelIconCell(
+            icon = {
+                Icon(
+                    modifier = Modifier.fillMaxSize(0.3f),
+                    painter = painterResource(id = R.drawable.ic_tmdb),
+                    contentDescription = null,
+                    tint = NeugelbTheme.colors.iconMain
+                )
+            },
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(NeugelbTheme.colors.divider)
+                .padding(TwelveDp),
+            text = stringResource(R.string.release_date) + " $date"
+        )
     }
 }

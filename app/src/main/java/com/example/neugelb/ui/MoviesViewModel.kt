@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MoviesViewModel(
-    val app: Application,
+    private val app: Application,
 ) : AndroidViewModel(app) {
 
     var errorLiveData = mutableLiveDataOf("")
@@ -59,8 +59,8 @@ class MoviesViewModel(
                         }.onSuccess {
                             totalNumberOfPages = it.body()?.totalPages ?: 1
                             currentPage = it.body()?.page ?: 0
-                            it.body()?.results?.let {
-                                movies.addAll(it)
+                            it.body()?.results?.let { newMovies ->
+                                movies.addAll(newMovies)
                                 moviesLiveData.postValue(movies)
                             }
                         }
@@ -116,7 +116,7 @@ class MoviesViewModel(
 }
 
 class MoviesViewModelFactory(
-    val app: Application
+    private val app: Application
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {

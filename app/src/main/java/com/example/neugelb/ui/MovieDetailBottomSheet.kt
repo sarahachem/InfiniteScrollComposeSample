@@ -9,13 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.neugelb.R
 import com.example.neugelb.compose.component.LabelValueCell
 import com.example.neugelb.compose.component.text.ContentText
-import com.example.neugelb.compose.theme.EightDp
+import com.example.neugelb.compose.theme.FiftySixDp
 import com.example.neugelb.compose.theme.TwentyFourDp
 import com.example.neugelb.model.InfoAndCredits
+
+const val DIRECTOR_TITLE: String = "Director"
 
 @ExperimentalMaterialApi
 @Composable
@@ -26,16 +27,16 @@ fun MovieInfoBottomSheet(
         info?.let { info ->
             LabelValueCell(
                 labelText = stringResource(id = R.string.overview),
-                modifier = Modifier.padding(horizontal = TwentyFourDp, vertical = EightDp),
+                modifier = Modifier.padding(horizontal = TwentyFourDp),
                 valueText = info.overview?.takeIf { it.isNotEmpty() }
-                    ?: "Oops this movie has no overview",
+                    ?: stringResource(id = R.string.no_overview),
                 bottomDivider = true
             )
 
             info.tagline?.takeIf { it.isNotEmpty() }?.let {
                 LabelValueCell(
                     labelText = stringResource(id = R.string.tagline),
-                    modifier = Modifier.padding(horizontal = TwentyFourDp, vertical = EightDp),
+                    modifier = Modifier.padding(horizontal = TwentyFourDp),
                     valueText = it,
                     bottomDivider = true
                 )
@@ -44,29 +45,28 @@ fun MovieInfoBottomSheet(
             info.genres.map { it.name }.takeIf { it.isNotEmpty() }?.let {
                 LabelValueCell(
                     labelText = stringResource(id = R.string.genres),
-                    modifier = Modifier.padding(horizontal = TwentyFourDp, vertical = EightDp),
+                    modifier = Modifier.padding(horizontal = TwentyFourDp),
                     valueText = it.joinToString(", "),
                     bottomDivider = true
                 )
             }
 
             val actors = info.credits.cast.takeIf { it.isNotEmpty() }
-            actors?.subList(0, if (actors.size > 6) 5 else actors.size)
+            actors?.subList(0, actors.size.coerceAtMost(5))
                 ?.let {
                     LabelValueCell(
                         labelText = stringResource(id = R.string.cast),
-                        modifier = Modifier.padding(horizontal = TwentyFourDp, vertical = EightDp),
-                        valueText = it
-                            .joinToString(", ") { it.name },
+                        modifier = Modifier.padding(horizontal = TwentyFourDp),
+                        valueText = it.joinToString(", ") { it.name },
                         bottomDivider = true
                     )
                 }
 
-            val directors = info.credits.crew.filter { it.job == "Director" }
+            val directors = info.credits.crew.filter { it.job == DIRECTOR_TITLE }
             directors.takeIf { it.isNotEmpty() }?.let {
                 LabelValueCell(
                     labelText = stringResource(id = R.string.directors),
-                    modifier = Modifier.padding(horizontal = TwentyFourDp, vertical = EightDp),
+                    modifier = Modifier.padding(horizontal = TwentyFourDp),
                     valueText = it.joinToString(", ") { it.name },
                     bottomDivider = true
                 )
@@ -74,7 +74,7 @@ fun MovieInfoBottomSheet(
 
             LabelValueCell(
                 labelText = stringResource(id = R.string.rating),
-                modifier = Modifier.padding(horizontal = TwentyFourDp, vertical = EightDp),
+                modifier = Modifier.padding(horizontal = TwentyFourDp),
                 valueText = info.popularity.toString(),
                 bottomDivider = true
             )
@@ -82,20 +82,23 @@ fun MovieInfoBottomSheet(
             info.homepage?.takeIf { it.isNotEmpty() }?.let {
                 LabelValueCell(
                     labelText = stringResource(id = R.string.homepage),
-                    modifier = Modifier.padding(horizontal = TwentyFourDp, vertical = EightDp),
+                    modifier = Modifier.padding(horizontal = TwentyFourDp),
                     valueText = it,
                     bottomDivider = true
                 )
             }
-        } ?: let {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(56.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                ContentText(text = "Couldn't find any data")
-            }
-        }
+        } ?: NoDataBox()
+    }
+}
+
+@Composable
+fun NoDataBox() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(FiftySixDp),
+        contentAlignment = Alignment.Center
+    ) {
+        ContentText(text = stringResource(id = R.string.no_data))
     }
 }

@@ -7,4 +7,6 @@ val EightDp = 8.dp
 val TwelveDp = 12.dp
 val SixteenDp = 16.dp
 val TwentyFourDp = 24.dp
+val ThirtySixDp = 36.dp
+val FiftySixDp = 56.dp
 

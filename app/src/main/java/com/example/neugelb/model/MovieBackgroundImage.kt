@@ -13,7 +13,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import coil.request.CachePolicy
+import com.example.neugelb.R
 import com.example.neugelb.compose.component.text.BodyText
 import com.example.neugelb.apis.POSTER_PATH_URL_API
 import com.example.neugelb.compose.theme.NeugelbTheme
@@ -24,7 +26,6 @@ import com.google.accompanist.imageloading.ImageLoadState
 @Composable
 fun MovieBackgroundImage(
     modifier: Modifier = Modifier,
-    title: String,
     url: String?,
     backgroundColor: Color = MaterialTheme.colors.surface,
     textColor: Color = MaterialTheme.colors.onSurface
@@ -46,7 +47,7 @@ fun MovieBackgroundImage(
                 .fillMaxWidth()
                 .aspectRatio(0.8f),
             contentDescription = "Movie image",
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.Inside
         )
         when (painter.loadState) {
             ImageLoadState.Loading -> {
@@ -57,7 +58,7 @@ fun MovieBackgroundImage(
                 )
             }
             is ImageLoadState.Error -> {
-                val text = title
+                val text = stringResource(id = R.string.no_poster_error)
                 val textModifier = Modifier.align(Alignment.Center)
                 BodyText(modifier = textModifier, text = text, color = textColor)
             }

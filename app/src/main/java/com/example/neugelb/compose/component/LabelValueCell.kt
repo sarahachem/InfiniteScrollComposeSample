@@ -17,16 +17,14 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
-import com.example.neugelb.compose.component.input.FormInputField
-import com.example.neugelb.compose.component.input.InputType
 import com.example.neugelb.compose.component.text.BodyText
 import com.example.neugelb.compose.component.text.ContentText
 import com.example.neugelb.compose.component.text.SecondaryText
 import com.example.neugelb.compose.theme.DarkThemePreviewParamProvider
+import com.example.neugelb.compose.theme.FourDp
 import com.example.neugelb.compose.theme.NeugelbTheme
 import com.example.neugelb.compose.theme.SixteenDp
 
@@ -38,7 +36,11 @@ fun LabelIconCell(
     text: String,
     color: Color = NeugelbTheme.colors.textSecondary
 ) {
-    Row(modifier = modifier.fillMaxHeight().padding(4.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = modifier
+            .fillMaxHeight()
+            .padding(FourDp), verticalAlignment = Alignment.CenterVertically
+    ) {
         icon?.let {
             icon()
         }
@@ -132,9 +134,17 @@ fun constraints(): ConstraintSet {
 @Composable
 fun SampleLabelValueCell(@PreviewParameter(DarkThemePreviewParamProvider::class) isDarkTheme: Boolean) {
     NeugelbTheme(darkTheme = isDarkTheme) {
-        LabelValueCell(
-            labelText = "I'm the label",
-            valueText = "I'm the text"
-        )
+        Column {
+            LabelValueCell(
+                labelText = "I'm the first label",
+                valueText = "I'm the first text",
+                bottomDivider = true
+            )
+            LabelValueCell(
+                labelText = "I'm the second label",
+                valueText = "I'm the second text",
+                bottomDivider = true
+            )
+        }
     }
 }

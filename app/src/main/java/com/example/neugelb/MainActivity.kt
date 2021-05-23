@@ -47,18 +47,14 @@ class MainActivity : AppCompatActivity() {
                         onBackPressedDispatcherOwner = this@MainActivity,
                         sheetState = bottomSheetState,
                         sheetContent = {
-                            MovieInfoBottomSheet(
-                                info = movieInfo
-                            )
+                            MovieInfoBottomSheet(info = movieInfo)
                         }
                     ) {
                         BackHandler {
                             scope.launch {
                                 when {
                                     bottomSheetState.isVisible -> scope.launch { bottomSheetState.hide() }
-                                    listState.firstVisibleItemIndex > 1 -> listState.animateScrollToItem(
-                                        0
-                                    )
+                                    listState.firstVisibleItemIndex > 1 -> listState.animateScrollToItem(0)
                                     else -> finish()
                                 }
                             }
@@ -74,8 +70,8 @@ class MainActivity : AppCompatActivity() {
         val factory = MoviesViewModelFactory(application)
         viewModel = ViewModelProvider(this, factory).get(MoviesViewModel::class.java)
         viewModel.errorLiveData.observe(this) {
-            it?.takeIf { it.isNotEmpty() }?.let {
-                Toast.makeText(this@MainActivity, it, Toast.LENGTH_LONG).show()
+            it?.takeIf { it.isNotEmpty() }?.let { error ->
+                Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
             }
         }
     }

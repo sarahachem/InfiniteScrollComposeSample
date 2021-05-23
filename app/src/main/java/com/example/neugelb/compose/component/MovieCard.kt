@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.neugelb.compose.component.text.ContentText
 import com.example.neugelb.compose.theme.NeugelbTheme
+import com.example.neugelb.compose.theme.ThirtySixDp
 import com.example.neugelb.compose.theme.TwelveDp
 import com.example.neugelb.compose.theme.TwentyFourDp
 import com.example.neugelb.model.MovieBackgroundImage
@@ -34,10 +35,10 @@ fun MovieCard(
         shape = MaterialTheme.shapes.large,
         elevation = 0.dp,
     ) {
-        Column(modifier = Modifier.padding(TwentyFourDp)) {
-            MovieBackgroundImage(title = title, url = url)
+        Column(modifier = Modifier.padding(ThirtySixDp)) {
+            MovieBackgroundImage(url = url)
             Spacer(modifier = Modifier.size(TwelveDp))
-            ContentText(modifier = Modifier.padding(start = TwentyFourDp), text = title)
+            ContentText(modifier = Modifier.padding(start = TwelveDp), text = title)
         }
     }
 }

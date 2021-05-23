@@ -10,4 +10,7 @@
     <string name="homepage">"Homepage: "</string>
     <string name="cast">"Cast: "</string>
     <string name="directors">"Directors: "</string>
+    <string name="no_data">Couldn\'t find any data</string>
+    <string name="no_overview">Oops this movie has no overview.</string>
+    <string name="no_poster_error">No poster found</string>
 </resources>
