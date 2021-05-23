@@ -14,25 +14,32 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import com.example.neugelb.autocomplete.autocomplete.AutoCompleteBox
 import com.example.neugelb.compose.component.input.TextInputField
 import com.example.neugelb.compose.component.text.ContentText
+import com.example.neugelb.compose.theme.NeugelbTheme
 import com.example.neugelb.compose.theme.SixteenDp
 import com.example.neugelb.model.MovieResult
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
+@ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @Composable
-fun AutoCompleteMoviesSearchBar(viewModel: MoviesViewModel) {
+fun AutoCompleteMoviesSearchBar(viewModel: MoviesViewModel, scope: CoroutineScope) {
 
     var value by remember { mutableStateOf("") }
     var isSearching by remember { mutableStateOf(false) }
     val view = LocalView.current
     val foundMovies by viewModel.foundItemsLiveData.observeAsState()
+    val localKeyboard = LocalSoftwareKeyboardController.current
 
     AutoCompleteBox(
         isSearching = isSearching,
@@ -53,7 +60,11 @@ fun AutoCompleteMoviesSearchBar(viewModel: MoviesViewModel) {
                         viewModel.filter(value)
                         view.clearFocus()
                     }) {
-                        Icon(imageVector = Icons.Filled.Clear, contentDescription = "Clear")
+                        Icon(
+                            imageVector = Icons.Filled.Clear,
+                            contentDescription = "Clear",
+                            tint = NeugelbTheme.colors.textPlaceholder
+                        )
                     }
                 },
                 imeAction = ImeAction.Done,
@@ -63,6 +74,7 @@ fun AutoCompleteMoviesSearchBar(viewModel: MoviesViewModel) {
                 },
                 onFocusChange = {
                     isSearching = it == FocusState.Active
+                    if (isSearching.not()) scope.launch { localKeyboard?.hide() }
                 }
             )
         }
@@ -71,11 +83,14 @@ fun AutoCompleteMoviesSearchBar(viewModel: MoviesViewModel) {
         value = it.title
         view.clearFocus()
     }
+
 }
 
 @Composable
 fun MovieAutoCompleteItem(movie: MovieResult) {
-    Column(modifier = Modifier.fillMaxWidth().padding(SixteenDp)) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(SixteenDp)) {
         ContentText(text = movie.title, textAlign = TextAlign.Start)
     }
 }

@@ -44,9 +44,12 @@ import com.example.neugelb.compose.component.text.ContentText
 import com.example.neugelb.compose.component.text.SecondaryText
 import com.example.neugelb.compose.theme.DarkThemePreviewParamProvider
 import com.example.neugelb.compose.theme.EightDp
+import com.example.neugelb.compose.theme.FourDp
 import com.example.neugelb.compose.theme.SixteenDp
 import com.example.neugelb.compose.theme.NeugelbTheme
 import com.example.neugelb.compose.theme.ThirtySixDp
+import com.example.neugelb.compose.theme.TwelveDp
+import com.example.neugelb.compose.theme.TwentyFourDp
 
 @Composable
 fun TextInputField(
@@ -88,7 +91,7 @@ fun TextInputField(
                     placeHolder?.let { PlaceholderHint(value = if (text.isEmpty()) it else "",) }
                 }
                 icon?.let {
-                    Spacer(Modifier.width(SixteenDp))
+                    Spacer(Modifier.width(FourDp).padding(end = TwentyFourDp))
                     it()
                 }
 
@@ -130,14 +133,14 @@ fun Modifier.fieldBorder(
     clickable: Boolean = false,
     onClick: () -> Unit = {}
 ) = composed {
-    heightIn(ThirtySixDp)
+    heightIn(TwentyFourDp)
         .background(color = MaterialTheme.colors.surface, shape = MaterialTheme.shapes.medium)
         .border(
             BorderStroke(1.dp, borderColor ?: NeugelbTheme.colors.textSecondary),
             shape = MaterialTheme.shapes.medium
         )
         .clickable(enabled = clickable, onClick = onClick)
-        .padding(EightDp)
+        .padding(horizontal = EightDp, vertical = FourDp)
 }
 
 @OptIn(ExperimentalMaterialApi::class)

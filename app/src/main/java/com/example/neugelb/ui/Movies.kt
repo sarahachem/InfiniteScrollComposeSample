@@ -20,15 +20,17 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.example.neugelb.R
 import com.example.neugelb.compose.component.LabelIconCell
 import com.example.neugelb.compose.component.MovieCard
 import com.example.neugelb.compose.theme.EightDp
+import com.example.neugelb.compose.theme.FiftySixDp
 import com.example.neugelb.compose.theme.NeugelbTheme
 import com.example.neugelb.compose.theme.TwelveDp
 import com.example.neugelb.compose.theme.TwentyFourDp
@@ -39,6 +41,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
@@ -55,6 +58,7 @@ fun Movies(
     val foundMovies by viewModel.foundItemsLiveData.observeAsState()
     val movies by viewModel.moviesLiveData.observeAsState()
     val actualMovies = foundMovies ?: movies
+    val localKeyboard = LocalSoftwareKeyboardController.current
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         SwipeRefresh(
@@ -65,7 +69,7 @@ fun Movies(
                 state = state,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 56.dp),
+                    .padding(top = FiftySixDp),
                 contentPadding = LocalWindowInsets.current.navigationBars.toPaddingValues()
             ) {
                 val groupedMovies = actualMovies?.groupBy { it.releaseDate }
@@ -82,14 +86,16 @@ fun Movies(
                             onMovieClicked = {
                                 scope.launch {
                                     if (isLoadingMovieInfo?.not() == true) {
+                                        localKeyboard?.hide()
                                         viewModel.onMovieClicked(item)
                                         bottomSheetState.show()
-                                        actualMovies.takeIf { it.indexOf(item) < it.lastIndex }?.let {
-                                            state.animateScrollToItem(
-                                                //take sticky headers into account
-                                                it.indexOf(item) + groupedMovies.keys.indexOf(date) + 1
-                                            )
-                                        }
+                                        actualMovies.takeIf { it.indexOf(item) < it.lastIndex }
+                                            ?.let {
+                                                state.animateScrollToItem(
+                                                    //take sticky headers into account
+                                                    it.indexOf(item) + groupedMovies.keys.indexOf(date) + 1
+                                                )
+                                            }
                                     }
                                 }
                             }
@@ -101,14 +107,14 @@ fun Movies(
                     }
                 }
             }
-            movies?.let {
-                AutoCompleteMoviesSearchBar(viewModel = viewModel)
+            movies?.takeIf { it.isNotEmpty() }?.let {
+                AutoCompleteMoviesSearchBar(viewModel, scope)
             }
         }
         if (isLoadingMovieInfo == true || isLoadingMovies == true)
             CircularProgressIndicator(color = NeugelbTheme.colors.mainColor)
 
-        if (shouldScrollUp == true) {
+        if (shouldScrollUp == true && actualMovies?.isNotEmpty() == true) {
             SideEffect {
                 scope.launch {
                     state.animateScrollToItem(0)
