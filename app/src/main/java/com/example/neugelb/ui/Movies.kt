@@ -115,7 +115,7 @@ fun Movies(
         if (isLoadingMovieInfo == true || isLoadingMovies == true)
             CircularProgressIndicator(color = NeugelbTheme.colors.mainColor)
 
-        if (shouldScrollUp == true && actualMovies?.isNotEmpty() == true) {
+        if (shouldScrollUp == true && actualMovies?.isNotEmpty() == true && state.isScrollInProgress.not()) {
             scope.launch {
                 state.animateScrollToItem(0)
             }
