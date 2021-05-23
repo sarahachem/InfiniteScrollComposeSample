@@ -1,0 +1,88 @@
+package com.example.neugelb.ui
+
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.ImeOptions
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.example.neugelb.autocomplete.autocomplete.AutoCompleteBox
+import com.example.neugelb.compose.component.input.TextInputField
+import com.example.neugelb.compose.component.text.SecondaryText
+import com.example.neugelb.model.MovieResult
+
+@ExperimentalAnimationApi
+@Composable
+fun AutoCompleteMoviesSearchBar(
+    viewModel: MoviesViewModel
+) {
+    var value by remember { mutableStateOf("") }
+    var isSearching by remember { mutableStateOf(false) }
+    val view = LocalView.current
+    val foundMovies by viewModel.foundItemsLiveData.observeAsState()
+
+    AutoCompleteBox(
+        isSearching = isSearching,
+        items = foundMovies ?: emptyList(),
+        itemContent = { movie -> MovieAutoCompleteItem(movie) },
+        content = {
+            TextInputField(
+                modifier = Modifier
+                    .fillMaxWidth(.9f),
+                text = value,
+                onValueChange = {
+                    value = it
+                    viewModel.filter(it)
+                },
+                placeHolder = "search movies",
+                icon = {
+                    IconButton(onClick = {
+                        value = ""
+                        viewModel.filter(value)
+                        view.clearFocus()
+                    }) {
+                        Icon(imageVector = Icons.Filled.Clear, contentDescription = "Clear")
+                    }
+                },
+                imeAction = ImeAction.Done,
+                onImeAction = {
+                    view.clearFocus()
+                    isSearching = false
+                },
+                onFocusChange = {
+                    isSearching = it == FocusState.Active
+                }
+            )
+        }
+    ) {
+        viewModel.selectMovie(it)
+        value = it.title
+        view.clearFocus()
+    }
+}
+
+@Composable
+fun MovieAutoCompleteItem(movie: MovieResult) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        SecondaryText(text = movie.title, textAlign = TextAlign.Center)
+    }
+}

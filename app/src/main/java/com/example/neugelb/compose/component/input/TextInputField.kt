@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -46,18 +47,11 @@ import com.example.neugelb.compose.theme.EightDp
 import com.example.neugelb.compose.theme.SixteenDp
 import com.example.neugelb.compose.theme.NeugelbTheme
 
-enum class InputType(
-    val keyboardType: KeyboardType,
-    val keyboardCapitalization: KeyboardCapitalization = KeyboardCapitalization.None
-) {
-    Text(KeyboardType.Text, KeyboardCapitalization.Sentences),
-}
-
 @Composable
 fun TextInputField(
     modifier: Modifier = Modifier,
-    inputType: InputType,
     text: String = "",
+    icon: @Composable() (() -> Unit)?,
     placeHolder: String? = null,
     isError: Boolean = false,
     imeAction: ImeAction = ImeAction.Next,
@@ -65,7 +59,7 @@ fun TextInputField(
     focusRequester: FocusRequester = FocusRequester(),
     enabled: Boolean = true,
     onValueChange: (String) -> Unit,
-    onFocusChange: (Boolean) -> Unit
+    onFocusChange: (FocusState) -> Unit
 ) {
 
     var isFocused by remember { mutableStateOf(false) }
@@ -101,6 +95,10 @@ fun TextInputField(
                         )
                     }
                 }
+                icon?.let {
+                    Spacer(Modifier.width(SixteenDp))
+                    it()
+                }
 
             }
         },
@@ -109,25 +107,19 @@ fun TextInputField(
             .fillMaxWidth()
             .focusRequester(focusRequester)
             .onFocusChanged {
-                isFocused = it != FocusState.Inactive
-                onFocusChange.invoke(isFocused)
+                it != FocusState.Inactive
+                onFocusChange.invoke(it)
             }
             .then(modifier),
         textStyle = textStyle,
         cursorBrush = SolidColor(NeugelbTheme.colors.textPrimary),
         singleLine = true,
         keyboardOptions = KeyboardOptions(
-            keyboardType = inputType.keyboardType,
-            capitalization = inputType.keyboardCapitalization,
             imeAction = imeAction
         ),
         keyboardActions = KeyboardActions(onAny = { onImeAction() }),
         onValueChange = {
-            if (inputType.keyboardType == KeyboardType.Number) {
-                if (it.isDigitsOnly())
-                    onValueChange(it)
-            } else
-                onValueChange(it)
+            onValueChange(it)
         },
         enabled = enabled
     )
@@ -136,16 +128,16 @@ fun TextInputField(
 @Composable
 fun FormInputField(
     modifier: Modifier = Modifier,
-    type: InputType,
     label: String? = null,
     text: String = "",
     hintText: String? = null,
     placeHolder: String = "",
     isError: Boolean = false,
     focusRequester: FocusRequester = FocusRequester(),
-    onFocusChange: (Boolean) -> Unit = {},
+    onFocusChange: (FocusState) -> Unit = {},
     imeAction: ImeAction = ImeAction.Next,
     enabled: Boolean = true,
+    icon: (@Composable () -> Unit)? = null,
     onImeAction: () -> Unit = {},
     onValueChange: (String?) -> Unit
 ) {
@@ -154,7 +146,6 @@ fun FormInputField(
             Spacer(Modifier.height(EightDp))
         }
         TextInputField(
-            inputType = type,
             text = text,
             placeHolder = placeHolder,
             isError = isError,
@@ -163,7 +154,8 @@ fun FormInputField(
             focusRequester = focusRequester,
             onValueChange = onValueChange,
             onFocusChange = onFocusChange,
-            enabled = enabled
+            enabled = enabled,
+            icon = icon
         )
         hintText?.takeIf { it.trim().isNotEmpty() }?.let {
             Spacer(Modifier.height(EightDp))
@@ -205,7 +197,6 @@ fun Modifier.fieldBorder(
 fun SampleInputField(@PreviewParameter(DarkThemePreviewParamProvider::class) isDarkTheme: Boolean) {
     NeugelbTheme(darkTheme = isDarkTheme) {
         FormInputField(
-            type = InputType.Text,
             label = "I'm the label",
             text = "I'm the text"
         ) {}

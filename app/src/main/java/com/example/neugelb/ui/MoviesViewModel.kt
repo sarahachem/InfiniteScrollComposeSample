@@ -3,6 +3,7 @@ package com.example.neugelb.ui
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,6 +27,7 @@ class MoviesViewModel(
     var isLoadingMoviesLiveData = mutableLiveDataOf(true)
     var isLoadingMovieInfoLiveData = mutableLiveDataOf(false)
     var moviesLiveData = mutableLiveDataOf<List<MovieResult>?>(null)
+    var foundItemsLiveData = mutableLiveDataOf<List<MovieResult>?>(null)
     var currentPage = 0
     var totalNumberOfPages = 1
     val movieCreditsAndInfoLiveData = mutableLiveDataOf<InfoAndCredits?>(null)
@@ -112,6 +114,25 @@ class MoviesViewModel(
                 movieCreditsAndInfoLiveData.postValue(it.body())
             }
         }
+    }
+
+    fun filter(query: String) {
+        foundItemsLiveData.postValue(null)
+        query.takeIf { it.isNotEmpty() }?.let {
+            val result = moviesLiveData.value?.filter { entity ->
+                entity.filter(query)
+            }
+            Log.e("movie", " result  ${result?.map { it.title }}")
+            foundItemsLiveData.postValue(result)
+            Log.e(
+                "movie",
+                "querying $query and found ${foundItemsLiveData.value?.map { it.title }}"
+            )
+        }
+    }
+
+    fun selectMovie(movieResult: MovieResult) {
+        foundItemsLiveData.postValue(listOf(movieResult))
     }
 }
 

@@ -2,9 +2,11 @@ package com.example.neugelb
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
@@ -29,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MoviesViewModel
 
+    @ExperimentalAnimationApi
     @ExperimentalFoundationApi
     @ExperimentalAnimatedInsets
     @ExperimentalComposeUiApi

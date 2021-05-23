@@ -1,5 +1,6 @@
 package com.example.neugelb.model
 
+import androidx.compose.runtime.Stable
 import com.google.gson.annotations.SerializedName
 
 data class MovieResult(
@@ -25,4 +26,13 @@ data class MovieResult(
     val voteAverage: Double,
     @SerializedName("vote_count")
     val voteCount: Int
-)
+) : AutoCompleteItem {
+    override fun filter(query: String): Boolean {
+        return title.toLowerCase().startsWith(query.toLowerCase())
+    }
+}
+
+@Stable
+interface AutoCompleteItem {
+    fun filter(query: String): Boolean
+}

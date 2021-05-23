@@ -1,5 +1,6 @@
 package com.example.neugelb.ui
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.example.neugelb.R
 import com.example.neugelb.compose.component.LabelIconCell
 import com.example.neugelb.compose.component.MovieCard
@@ -35,6 +37,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
@@ -46,6 +49,7 @@ fun Movies(
 ) {
     val isLoadingMovieInfo by viewModel.isLoadingMovieInfoLiveData.observeAsState()
     val isLoadingMovies by viewModel.isLoadingMoviesLiveData.observeAsState()
+    val foundMovies by viewModel.foundItemsLiveData.observeAsState()
     val movies by viewModel.moviesLiveData.observeAsState()
     Box(
         modifier = Modifier
@@ -58,10 +62,12 @@ fun Movies(
         ) {
             LazyColumn(
                 state = state,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 56.dp),
                 contentPadding = LocalWindowInsets.current.navigationBars.toPaddingValues()
             ) {
-                val groupedMovies = movies?.groupBy { it.releaseDate }
+                val groupedMovies = (foundMovies ?: movies)?.groupBy { it.releaseDate }
                 groupedMovies?.forEach { (date, movie) ->
                     stickyHeader {
                         StickyHeaderRow(date)
@@ -93,6 +99,9 @@ fun Movies(
                         }
                     }
                 }
+            }
+            movies?.let {
+                AutoCompleteMoviesSearchBar(viewModel = viewModel)
             }
         }
         if (isLoadingMovieInfo == true || isLoadingMovies == true)

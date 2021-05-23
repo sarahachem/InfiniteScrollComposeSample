@@ -28,7 +28,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.example.neugelb.compose.component.input.FormInputField
-import com.example.neugelb.compose.component.input.InputType
 import com.example.neugelb.compose.theme.FourDp
 import com.example.neugelb.compose.theme.DarkThemePreviewParamProvider
 import com.example.neugelb.compose.theme.NeugelbTheme
@@ -93,7 +92,6 @@ fun PreviewBottomSheetHello(@PreviewParameter(DarkThemePreviewParamProvider::cla
             content = {
                 Column {
                     FormInputField(
-                        type = InputType.Text,
                         label = "Hello",
                         text = "Hello"
                     ) {}
