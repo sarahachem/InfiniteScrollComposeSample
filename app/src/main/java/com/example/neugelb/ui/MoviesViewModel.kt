@@ -45,7 +45,6 @@ class MoviesViewModel(
         val movies = moviesLiveData.value?.toMutableList() ?: mutableListOf()
         viewModelScope.launch(Dispatchers.IO) {
             if (currentPage == 0) {
-                delay(400)
                 isLoadingMoviesLiveData.postValue(true)
             }
             if (currentPage < totalNumberOfPages) {
