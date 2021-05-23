@@ -93,7 +93,9 @@ fun Movies(
                                             ?.let {
                                                 state.animateScrollToItem(
                                                     //take sticky headers into account
-                                                    it.indexOf(item) + groupedMovies.keys.indexOf(date) + 1
+                                                    it.indexOf(item) + groupedMovies.keys.indexOf(
+                                                        date
+                                                    ) + 1
                                                 )
                                             }
                                     }
@@ -115,10 +117,8 @@ fun Movies(
             CircularProgressIndicator(color = NeugelbTheme.colors.mainColor)
 
         if (shouldScrollUp == true && actualMovies?.isNotEmpty() == true) {
-            SideEffect {
-                scope.launch {
-                    state.animateScrollToItem(0)
-                }
+            scope.launch {
+                state.animateScrollToItem(0)
             }
             viewModel.shouldScrollUpLiveData.postValue(false)
         }
