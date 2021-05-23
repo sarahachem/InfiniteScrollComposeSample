@@ -31,7 +31,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -52,7 +51,6 @@ enum class InputType(
     val keyboardCapitalization: KeyboardCapitalization = KeyboardCapitalization.None
 ) {
     Text(KeyboardType.Text, KeyboardCapitalization.Sentences),
-    Number(KeyboardType.Number)
 }
 
 @Composable
@@ -183,7 +181,6 @@ private fun PlaceholderHint(value: String, isError: Boolean, isFocused: Boolean)
     ContentText(
         text = value,
         color = if (isError && isFocused.not()) MaterialTheme.colors.error else NeugelbTheme.colors.textPlaceholder,
-        maxLines = 1
     )
 }
 

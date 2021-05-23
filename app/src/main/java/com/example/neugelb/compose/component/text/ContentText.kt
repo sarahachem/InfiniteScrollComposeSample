@@ -13,14 +13,12 @@ fun ContentText(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = NeugelbTheme.colors.textPrimary,
-    maxLines: Int = Int.MAX_VALUE,
     textAlign: TextAlign? = null
 ) = Text(
     modifier = modifier,
     textAlign = textAlign,
     text = text,
     color = color,
-    maxLines = maxLines,
     overflow = TextOverflow.Ellipsis,
     style = NeugelbTheme.types.body1
 )
