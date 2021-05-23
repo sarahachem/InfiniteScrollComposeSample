@@ -3,19 +3,17 @@ package com.example.neugelb.ui
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.neugelb.ApiBuilders
+import com.example.neugelb.apis.ApiBuilders
 import com.example.neugelb.BuildConfig
 import com.example.neugelb.apis.checkSuccessful
 import com.example.neugelb.model.InfoAndCredits
 import com.example.neugelb.model.MovieResult
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 

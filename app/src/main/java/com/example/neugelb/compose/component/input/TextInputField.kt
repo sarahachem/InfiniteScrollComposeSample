@@ -67,7 +67,7 @@ fun TextInputField(
 
     var isFocused by remember { mutableStateOf(false) }
     val borderColor = when {
-        isFocused -> NeugelbTheme.colors.mainColor
+        isFocused -> NeugelbTheme.colors.iconMain
         text.isBlank() -> NeugelbTheme.colors.textPlaceholder
         else -> NeugelbTheme.colors.textPrimary
     }
@@ -88,10 +88,14 @@ fun TextInputField(
             ) {
                 Box(modifier = Modifier.weight(1f)) {
                     innerTextField()
-                    placeHolder?.let { PlaceholderHint(value = if (text.isEmpty()) it else "",) }
+                    placeHolder?.let { PlaceholderHint(value = if (text.isEmpty()) it else "") }
                 }
                 icon?.let {
-                    Spacer(Modifier.width(FourDp).padding(end = TwentyFourDp))
+                    Spacer(
+                        Modifier
+                            .width(FourDp)
+                            .padding(end = TwentyFourDp)
+                    )
                     it()
                 }
 
@@ -102,7 +106,7 @@ fun TextInputField(
             .fillMaxWidth()
             .focusRequester(focusRequester)
             .onFocusChanged {
-                it != FocusState.Inactive
+                isFocused = it != FocusState.Inactive
                 onFocusChange.invoke(it)
             }
             .then(modifier),

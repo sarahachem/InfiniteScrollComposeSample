@@ -1,7 +1,5 @@
-package com.example.neugelb
+package com.example.neugelb.apis
 
-import com.example.neugelb.apis.TMDB_URL_API
-import com.example.neugelb.apis.TMDBApi
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

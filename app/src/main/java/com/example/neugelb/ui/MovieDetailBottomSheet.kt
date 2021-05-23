@@ -15,6 +15,7 @@ import com.example.neugelb.compose.component.text.ContentText
 import com.example.neugelb.compose.theme.FiftySixDp
 import com.example.neugelb.compose.theme.TwentyFourDp
 import com.example.neugelb.model.InfoAndCredits
+import java.util.Locale
 
 const val DIRECTOR_TITLE: String = "Director"
 
@@ -38,6 +39,15 @@ fun MovieInfoBottomSheet(
                     labelText = stringResource(id = R.string.tagline),
                     modifier = Modifier.padding(horizontal = TwentyFourDp),
                     valueText = it,
+                    bottomDivider = true
+                )
+            }
+
+            info.original_language.takeIf { it.isNotEmpty() }?.let { lang ->
+                LabelValueCell(
+                    labelText = stringResource(id = R.string.language),
+                    modifier = Modifier.padding(horizontal = TwentyFourDp),
+                    valueText = Locale(lang).displayLanguage,
                     bottomDivider = true
                 )
             }
