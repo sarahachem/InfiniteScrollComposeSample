@@ -16,6 +16,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.example.neugelb.R
 import com.example.neugelb.compose.component.LabelIconCell
 import com.example.neugelb.compose.component.MovieCard
+import com.example.neugelb.compose.theme.EightDp
 import com.example.neugelb.compose.theme.NeugelbTheme
 import com.example.neugelb.compose.theme.TwelveDp
 import com.example.neugelb.compose.theme.TwentyFourDp
@@ -49,13 +51,12 @@ fun Movies(
 ) {
     val isLoadingMovieInfo by viewModel.isLoadingMovieInfoLiveData.observeAsState()
     val isLoadingMovies by viewModel.isLoadingMoviesLiveData.observeAsState()
+    val shouldScrollUp by viewModel.shouldScrollUpLiveData.observeAsState()
     val foundMovies by viewModel.foundItemsLiveData.observeAsState()
     val movies by viewModel.moviesLiveData.observeAsState()
-    Box(
-        modifier = Modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
+    val actualMovies = foundMovies ?: movies
+
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         SwipeRefresh(
             state = rememberSwipeRefreshState(false),
             onRefresh = { viewModel.refresh() },
@@ -67,7 +68,7 @@ fun Movies(
                     .padding(top = 56.dp),
                 contentPadding = LocalWindowInsets.current.navigationBars.toPaddingValues()
             ) {
-                val groupedMovies = (foundMovies ?: movies)?.groupBy { it.releaseDate }
+                val groupedMovies = actualMovies?.groupBy { it.releaseDate }
                 groupedMovies?.forEach { (date, movie) ->
                     stickyHeader {
                         StickyHeaderRow(date)
@@ -83,7 +84,7 @@ fun Movies(
                                     if (isLoadingMovieInfo?.not() == true) {
                                         viewModel.onMovieClicked(item)
                                         bottomSheetState.show()
-                                        movies?.takeIf { it.indexOf(item) < it.lastIndex }?.let {
+                                        actualMovies.takeIf { it.indexOf(item) < it.lastIndex }?.let {
                                             state.animateScrollToItem(
                                                 //take sticky headers into account
                                                 it.indexOf(item) + groupedMovies.keys.indexOf(date) + 1
@@ -106,6 +107,15 @@ fun Movies(
         }
         if (isLoadingMovieInfo == true || isLoadingMovies == true)
             CircularProgressIndicator(color = NeugelbTheme.colors.mainColor)
+
+        if (shouldScrollUp == true) {
+            SideEffect {
+                scope.launch {
+                    state.animateScrollToItem(0)
+                }
+            }
+            viewModel.shouldScrollUpLiveData.postValue(false)
+        }
     }
 }
 
@@ -125,7 +135,7 @@ fun StickyHeaderRow(date: String) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(NeugelbTheme.colors.divider)
-                .padding(TwelveDp),
+                .padding(horizontal = TwelveDp, vertical = EightDp),
             text = stringResource(R.string.release_date) + " $date"
         )
     }

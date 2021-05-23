@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -25,6 +26,7 @@ import com.example.neugelb.ui.MoviesViewModelFactory
 import com.example.neugelb.ui.Movies
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.google.accompanist.insets.ProvideWindowInsets
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {

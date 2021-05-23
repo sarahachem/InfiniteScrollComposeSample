@@ -46,32 +46,30 @@ import com.example.neugelb.compose.theme.DarkThemePreviewParamProvider
 import com.example.neugelb.compose.theme.EightDp
 import com.example.neugelb.compose.theme.SixteenDp
 import com.example.neugelb.compose.theme.NeugelbTheme
+import com.example.neugelb.compose.theme.ThirtySixDp
 
 @Composable
 fun TextInputField(
     modifier: Modifier = Modifier,
     text: String = "",
-    icon: @Composable() (() -> Unit)?,
+    icon: @Composable (() -> Unit)? = null,
     placeHolder: String? = null,
-    isError: Boolean = false,
     imeAction: ImeAction = ImeAction.Next,
     onImeAction: () -> Unit = {},
     focusRequester: FocusRequester = FocusRequester(),
     enabled: Boolean = true,
-    onValueChange: (String) -> Unit,
+    onValueChange: (String) -> Unit = {},
     onFocusChange: (FocusState) -> Unit
 ) {
 
     var isFocused by remember { mutableStateOf(false) }
     val borderColor = when {
         isFocused -> NeugelbTheme.colors.mainColor
-        isError -> MaterialTheme.colors.error
         text.isBlank() -> NeugelbTheme.colors.textPlaceholder
         else -> NeugelbTheme.colors.textPrimary
     }
     val textStyle = NeugelbTheme.types.body1.copy(
         color = when {
-            isError && isFocused.not() -> MaterialTheme.colors.error
             text.isBlank() -> NeugelbTheme.colors.textPlaceholder
             else -> NeugelbTheme.colors.textPrimary
         }
@@ -87,13 +85,7 @@ fun TextInputField(
             ) {
                 Box(modifier = Modifier.weight(1f)) {
                     innerTextField()
-                    placeHolder?.let {
-                        PlaceholderHint(
-                            value = if (text.isEmpty()) it else "",
-                            isError = isError,
-                            isFocused = isFocused
-                        )
-                    }
+                    placeHolder?.let { PlaceholderHint(value = if (text.isEmpty()) it else "",) }
                 }
                 icon?.let {
                     Spacer(Modifier.width(SixteenDp))
@@ -126,53 +118,10 @@ fun TextInputField(
 }
 
 @Composable
-fun FormInputField(
-    modifier: Modifier = Modifier,
-    label: String? = null,
-    text: String = "",
-    hintText: String? = null,
-    placeHolder: String = "",
-    isError: Boolean = false,
-    focusRequester: FocusRequester = FocusRequester(),
-    onFocusChange: (FocusState) -> Unit = {},
-    imeAction: ImeAction = ImeAction.Next,
-    enabled: Boolean = true,
-    icon: (@Composable () -> Unit)? = null,
-    onImeAction: () -> Unit = {},
-    onValueChange: (String?) -> Unit
-) {
-    Column(modifier = modifier) {
-        label?.takeIf { it.trim().isNotEmpty() }?.let {
-            Spacer(Modifier.height(EightDp))
-        }
-        TextInputField(
-            text = text,
-            placeHolder = placeHolder,
-            isError = isError,
-            imeAction = imeAction,
-            onImeAction = onImeAction,
-            focusRequester = focusRequester,
-            onValueChange = onValueChange,
-            onFocusChange = onFocusChange,
-            enabled = enabled,
-            icon = icon
-        )
-        hintText?.takeIf { it.trim().isNotEmpty() }?.let {
-            Spacer(Modifier.height(EightDp))
-            SecondaryText(
-                textAlign = TextAlign.Start,
-                text = it,
-                color = if (isError) MaterialTheme.colors.error else NeugelbTheme.colors.textSecondary,
-            )
-        }
-    }
-}
-
-@Composable
-private fun PlaceholderHint(value: String, isError: Boolean, isFocused: Boolean) {
+private fun PlaceholderHint(value: String) {
     ContentText(
         text = value,
-        color = if (isError && isFocused.not()) MaterialTheme.colors.error else NeugelbTheme.colors.textPlaceholder,
+        color = NeugelbTheme.colors.textPlaceholder,
     )
 }
 
@@ -181,14 +130,14 @@ fun Modifier.fieldBorder(
     clickable: Boolean = false,
     onClick: () -> Unit = {}
 ) = composed {
-    heightIn(56.dp)
+    heightIn(ThirtySixDp)
         .background(color = MaterialTheme.colors.surface, shape = MaterialTheme.shapes.medium)
         .border(
             BorderStroke(1.dp, borderColor ?: NeugelbTheme.colors.textSecondary),
             shape = MaterialTheme.shapes.medium
         )
         .clickable(enabled = clickable, onClick = onClick)
-        .padding(SixteenDp)
+        .padding(EightDp)
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -196,8 +145,8 @@ fun Modifier.fieldBorder(
 @Composable
 fun SampleInputField(@PreviewParameter(DarkThemePreviewParamProvider::class) isDarkTheme: Boolean) {
     NeugelbTheme(darkTheme = isDarkTheme) {
-        FormInputField(
-            label = "I'm the label",
+        TextInputField(
+            placeHolder = "sample",
             text = "I'm the text"
         ) {}
     }

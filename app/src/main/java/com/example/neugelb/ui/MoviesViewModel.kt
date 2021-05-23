@@ -28,6 +28,7 @@ class MoviesViewModel(
     var isLoadingMovieInfoLiveData = mutableLiveDataOf(false)
     var moviesLiveData = mutableLiveDataOf<List<MovieResult>?>(null)
     var foundItemsLiveData = mutableLiveDataOf<List<MovieResult>?>(null)
+    var shouldScrollUpLiveData = mutableLiveDataOf(false)
     var currentPage = 0
     var totalNumberOfPages = 1
     val movieCreditsAndInfoLiveData = mutableLiveDataOf<InfoAndCredits?>(null)
@@ -116,18 +117,14 @@ class MoviesViewModel(
         }
     }
 
-    fun filter(query: String) {
+    fun filter(query: String?) {
         foundItemsLiveData.postValue(null)
-        query.takeIf { it.isNotEmpty() }?.let {
+        shouldScrollUpLiveData.postValue(true)
+        query?.takeIf { it.isNotEmpty() }?.let {
             val result = moviesLiveData.value?.filter { entity ->
                 entity.filter(query)
             }
-            Log.e("movie", " result  ${result?.map { it.title }}")
             foundItemsLiveData.postValue(result)
-            Log.e(
-                "movie",
-                "querying $query and found ${foundItemsLiveData.value?.map { it.title }}"
-            )
         }
     }
 

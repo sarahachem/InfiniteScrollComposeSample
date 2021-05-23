@@ -18,19 +18,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.ImeOptions
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.example.neugelb.autocomplete.autocomplete.AutoCompleteBox
 import com.example.neugelb.compose.component.input.TextInputField
-import com.example.neugelb.compose.component.text.SecondaryText
+import com.example.neugelb.compose.component.text.ContentText
+import com.example.neugelb.compose.theme.SixteenDp
 import com.example.neugelb.model.MovieResult
 
 @ExperimentalAnimationApi
 @Composable
-fun AutoCompleteMoviesSearchBar(
-    viewModel: MoviesViewModel
-) {
+fun AutoCompleteMoviesSearchBar(viewModel: MoviesViewModel) {
+
     var value by remember { mutableStateOf("") }
     var isSearching by remember { mutableStateOf(false) }
     val view = LocalView.current
@@ -42,8 +40,7 @@ fun AutoCompleteMoviesSearchBar(
         itemContent = { movie -> MovieAutoCompleteItem(movie) },
         content = {
             TextInputField(
-                modifier = Modifier
-                    .fillMaxWidth(.9f),
+                modifier = Modifier.fillMaxWidth(),
                 text = value,
                 onValueChange = {
                     value = it
@@ -78,11 +75,7 @@ fun AutoCompleteMoviesSearchBar(
 
 @Composable
 fun MovieAutoCompleteItem(movie: MovieResult) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        SecondaryText(text = movie.title, textAlign = TextAlign.Center)
+    Column(modifier = Modifier.fillMaxWidth().padding(SixteenDp)) {
+        ContentText(text = movie.title, textAlign = TextAlign.Start)
     }
 }
