@@ -87,7 +87,6 @@ class MoviesViewModel(
     suspend fun onMovieClicked(movieEntry: MovieResult) {
         if (hasInternetConnection()) {
             kotlin.runCatching {
-                isLoadingMovieInfoLiveData.postValue(true)
                 getMovieInfoAndCredits(movieEntry)
             }.onSuccess {
                 isLoadingMovieInfoLiveData.postValue(false)

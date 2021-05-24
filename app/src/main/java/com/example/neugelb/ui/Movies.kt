@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.ModalBottomSheetState
@@ -26,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.example.neugelb.R
+import com.example.neugelb.compose.component.ClickableCircleProgress
 import com.example.neugelb.compose.component.LabelIconCell
 import com.example.neugelb.compose.component.MovieCard
 import com.example.neugelb.compose.theme.EightDp
@@ -86,17 +86,17 @@ fun Movies(
                                 scope.launch {
                                     if (isLoadingMovieInfo?.not() == true) {
                                         localKeyboard?.hide()
-                                        viewModel.onMovieClicked(item)
-                                        bottomSheetState.show()
+                                        viewModel.isLoadingMovieInfoLiveData.postValue(true)
                                         actualMovies.takeIf { it.indexOf(item) < it.lastIndex }
                                             ?.let {
                                                 state.animateScrollToItem(
-                                                    //take sticky headers into account
                                                     it.indexOf(item) + groupedMovies.keys.indexOf(
                                                         date
                                                     ) + 1
                                                 )
                                             }
+                                        viewModel.onMovieClicked(item)
+                                        bottomSheetState.show()
                                     }
                                 }
                             }
@@ -112,9 +112,12 @@ fun Movies(
                 AutoCompleteMoviesSearchBar(viewModel, scope)
             }
         }
-        if (isLoadingMovieInfo == true || isLoadingMovies == true)
-            CircularProgressIndicator(color = NeugelbTheme.colors.mainColor)
-
+        if (isLoadingMovieInfo == true || isLoadingMovies == true) {
+            ClickableCircleProgress(
+                Modifier.matchParentSize(),
+                isLoadingMovieInfo == false && isLoadingMovies == false
+            )
+        }
         if (shouldScrollUp == true && actualMovies?.isNotEmpty() == true && state.isScrollInProgress.not()) {
             scope.launch {
                 state.animateScrollToItem(0)
