@@ -5,11 +5,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -33,22 +31,14 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.core.text.isDigitsOnly
 import com.example.neugelb.compose.component.text.ContentText
-import com.example.neugelb.compose.component.text.SecondaryText
 import com.example.neugelb.compose.theme.DarkThemePreviewParamProvider
 import com.example.neugelb.compose.theme.EightDp
 import com.example.neugelb.compose.theme.FourDp
-import com.example.neugelb.compose.theme.SixteenDp
 import com.example.neugelb.compose.theme.NeugelbTheme
-import com.example.neugelb.compose.theme.ThirtySixDp
-import com.example.neugelb.compose.theme.TwelveDp
 import com.example.neugelb.compose.theme.TwentyFourDp
 
 @Composable
@@ -83,12 +73,12 @@ fun TextInputField(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fieldBorder(borderColor = borderColor),
+                    .border(borderColor = borderColor),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(modifier = Modifier.weight(1f)) {
                     innerTextField()
-                    placeHolder?.let { PlaceholderHint(value = if (text.isEmpty()) it else "") }
+                    placeHolder?.let { Placeholder(value = if (text.isEmpty()) it else "") }
                 }
                 icon?.let {
                     Spacer(
@@ -125,14 +115,14 @@ fun TextInputField(
 }
 
 @Composable
-private fun PlaceholderHint(value: String) {
+private fun Placeholder(value: String) {
     ContentText(
         text = value,
         color = NeugelbTheme.colors.textPlaceholder,
     )
 }
 
-fun Modifier.fieldBorder(
+fun Modifier.border(
     borderColor: Color? = null,
     clickable: Boolean = false,
     onClick: () -> Unit = {}

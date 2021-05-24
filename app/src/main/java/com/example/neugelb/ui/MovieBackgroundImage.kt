@@ -1,4 +1,4 @@
-package com.example.neugelb.model
+package com.example.neugelb.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

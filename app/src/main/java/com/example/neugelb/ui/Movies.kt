@@ -27,7 +27,6 @@ import androidx.compose.ui.text.style.TextAlign
 import com.example.neugelb.R
 import com.example.neugelb.compose.component.ClickableCircleProgress
 import com.example.neugelb.compose.component.LabelIconCell
-import com.example.neugelb.compose.component.MovieCard
 import com.example.neugelb.compose.theme.EightDp
 import com.example.neugelb.compose.theme.FiftySixDp
 import com.example.neugelb.compose.theme.NeugelbTheme

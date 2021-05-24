@@ -1,4 +1,4 @@
-package com.example.neugelb.compose.component
+package com.example.neugelb.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +12,6 @@ import androidx.compose.ui.unit.dp
 import com.example.neugelb.compose.theme.NeugelbTheme
 import com.example.neugelb.compose.theme.ThirtySixDp
 import com.example.neugelb.compose.theme.TwelveDp
-import com.example.neugelb.model.MovieBackgroundImage
 
 @Composable
 fun MovieCard(

@@ -33,7 +33,7 @@ fun MainLayoutWithBottomSheet(
                 state = sheetState,
                 content = sheetContent
             ) {
-                MainPresentationLayout(
+                MainContent(
                     bodyContentPadding = bodyContentPadding,
                     bodyContent = bodyContent
                 )
@@ -43,7 +43,7 @@ fun MainLayoutWithBottomSheet(
 }
 
 @Composable
-private fun MainPresentationLayout(
+private fun MainContent(
     contentModifier: Modifier = Modifier,
     bodyContentPadding: PaddingValues = PaddingValues(),
     bodyContent: @Composable ColumnScope.() -> Unit
