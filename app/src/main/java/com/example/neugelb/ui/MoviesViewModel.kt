@@ -45,12 +45,12 @@ class MoviesViewModel(
     fun fetchMovies() {
         val movies = moviesLiveData.value?.toMutableList() ?: mutableListOf()
         viewModelScope.launch(Dispatchers.IO) {
-            if (currentPage == 0) {
-                isLoadingMoviesLiveData.postValue(true)
-            }
             if (currentPage < totalNumberOfPages) {
                 withContext(Dispatchers.IO) {
                     if (hasInternetConnection()) {
+                        if (currentPage == 0) {
+                            isLoadingMoviesLiveData.postValue(true)
+                        }
                         kotlin.runCatching {
                             ApiBuilders.getTMDBApi().getMovies(
                                 BuildConfig.TMDB_API_KEY, currentPage + 1
@@ -77,11 +77,9 @@ class MoviesViewModel(
     }
 
     private fun hasInternetConnection(): Boolean {
-        val cm: ConnectivityManager =
-            app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork = cm.activeNetworkInfo;
-        val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting;
-        return isConnected;
+        val activeNetwork =
+            (app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).activeNetworkInfo
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting;
     }
 
     suspend fun onMovieClicked(movieEntry: MovieResult) {
@@ -127,6 +125,11 @@ class MoviesViewModel(
 
     fun selectMovie(movieResult: MovieResult) {
         foundItemsLiveData.postValue(listOf(movieResult))
+    }
+
+    fun isLoadingInfo(isLoading: Boolean) {
+        if (hasInternetConnection()) isLoadingMovieInfoLiveData.postValue(isLoading)
+        else isLoadingMovieInfoLiveData.postValue(false)
     }
 }
 

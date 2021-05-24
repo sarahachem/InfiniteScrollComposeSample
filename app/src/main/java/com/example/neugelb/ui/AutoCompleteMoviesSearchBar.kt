@@ -55,11 +55,12 @@ fun AutoCompleteMoviesSearchBar(viewModel: MoviesViewModel, scope: CoroutineScop
                 },
                 placeHolder = "search movies",
                 icon = {
-                    IconButton(onClick = {
-                        value = ""
-                        viewModel.filter(value)
-                        view.clearFocus()
-                    }) {
+                    IconButton(enabled = value.isNotEmpty(),
+                        onClick = {
+                            value = ""
+                            viewModel.filter(value)
+                            view.clearFocus()
+                        }) {
                         Icon(
                             imageVector = Icons.Filled.Clear,
                             contentDescription = "Clear",
@@ -88,9 +89,11 @@ fun AutoCompleteMoviesSearchBar(viewModel: MoviesViewModel, scope: CoroutineScop
 
 @Composable
 fun MovieAutoCompleteItem(movie: MovieResult) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(SixteenDp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(SixteenDp)
+    ) {
         ContentText(text = movie.title, textAlign = TextAlign.Start)
     }
 }

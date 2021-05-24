@@ -86,7 +86,7 @@ fun Movies(
                                 scope.launch {
                                     if (isLoadingMovieInfo?.not() == true) {
                                         localKeyboard?.hide()
-                                        viewModel.isLoadingMovieInfoLiveData.postValue(true)
+                                        viewModel.isLoadingInfo(true)
                                         actualMovies.takeIf { it.indexOf(item) < it.lastIndex }
                                             ?.let {
                                                 state.animateScrollToItem(
