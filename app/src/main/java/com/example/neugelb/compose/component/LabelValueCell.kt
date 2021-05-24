@@ -39,7 +39,7 @@ fun LabelIconCell(
     Row(
         modifier = modifier
             .fillMaxHeight()
-            .padding(FourDp), verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = FourDp), verticalAlignment = Alignment.CenterVertically
     ) {
         icon?.let {
             icon()

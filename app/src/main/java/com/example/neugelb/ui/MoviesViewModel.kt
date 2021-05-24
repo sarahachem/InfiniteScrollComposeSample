@@ -8,13 +8,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.neugelb.ApiBuilders
+import com.example.neugelb.apis.ApiBuilders
 import com.example.neugelb.BuildConfig
 import com.example.neugelb.apis.checkSuccessful
 import com.example.neugelb.model.InfoAndCredits
 import com.example.neugelb.model.MovieResult
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -26,6 +25,8 @@ class MoviesViewModel(
     var isLoadingMoviesLiveData = mutableLiveDataOf(true)
     var isLoadingMovieInfoLiveData = mutableLiveDataOf(false)
     var moviesLiveData = mutableLiveDataOf<List<MovieResult>?>(null)
+    var foundItemsLiveData = mutableLiveDataOf<List<MovieResult>?>(null)
+    var shouldScrollUpLiveData = mutableLiveDataOf(false)
     var currentPage = 0
     var totalNumberOfPages = 1
     val movieCreditsAndInfoLiveData = mutableLiveDataOf<InfoAndCredits?>(null)
@@ -86,7 +87,6 @@ class MoviesViewModel(
     suspend fun onMovieClicked(movieEntry: MovieResult) {
         if (hasInternetConnection()) {
             kotlin.runCatching {
-                isLoadingMovieInfoLiveData.postValue(true)
                 getMovieInfoAndCredits(movieEntry)
             }.onSuccess {
                 isLoadingMovieInfoLiveData.postValue(false)
@@ -112,6 +112,21 @@ class MoviesViewModel(
                 movieCreditsAndInfoLiveData.postValue(it.body())
             }
         }
+    }
+
+    fun filter(query: String?) {
+        foundItemsLiveData.postValue(null)
+        shouldScrollUpLiveData.postValue(true)
+        query?.takeIf { it.isNotEmpty() }?.let {
+            val result = moviesLiveData.value?.filter { entity ->
+                entity.filter(query)
+            }
+            foundItemsLiveData.postValue(result)
+        }
+    }
+
+    fun selectMovie(movieResult: MovieResult) {
+        foundItemsLiveData.postValue(listOf(movieResult))
     }
 }
 

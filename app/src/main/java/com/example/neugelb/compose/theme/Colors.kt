@@ -10,7 +10,7 @@ internal object ThemeColorAlias {
     val backgroundSecondary = ThemedColor(light = ColorAlias.disabledGrey, dark = ColorAlias.darkGrey)
     val textMain = ThemedColor(light = ColorAlias.black, dark = ColorAlias.lightGrey)
     val textSecondary = ThemedColor(light = ColorAlias.black, dark = ColorAlias.veryLightGrey)
-    val textPlaceholder = ThemedColor(light = ColorAlias.disabledGrey, dark = ColorAlias.disabledGrey)
+    val textPlaceholder = ThemedColor(light = ColorAlias.grey, dark = ColorAlias.disabledGrey)
     val actionMain = ThemedColor(light = ColorAlias.blue, dark = ColorAlias.blue)
     val actionMainError = ThemedColor(light = ColorAlias.red, dark = ColorAlias.red)
     val actionMainDisabled = ThemedColor(light = ColorAlias.disabledGrey, dark = ColorAlias.disabledGrey)

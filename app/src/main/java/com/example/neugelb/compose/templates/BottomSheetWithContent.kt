@@ -23,12 +23,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsWithImePadding
-import com.example.neugelb.compose.component.input.FormInputField
-import com.example.neugelb.compose.component.input.InputType
+import com.example.neugelb.compose.component.text.SecondaryText
 import com.example.neugelb.compose.theme.FourDp
 import com.example.neugelb.compose.theme.DarkThemePreviewParamProvider
 import com.example.neugelb.compose.theme.NeugelbTheme
@@ -92,11 +92,7 @@ fun PreviewBottomSheetHello(@PreviewParameter(DarkThemePreviewParamProvider::cla
             state = bottomSheetState,
             content = {
                 Column {
-                    FormInputField(
-                        type = InputType.Text,
-                        label = "Hello",
-                        text = "Hello"
-                    ) {}
+                   SecondaryText(text = "hello", textAlign = TextAlign.Center)
                 }
             }
         ) {
