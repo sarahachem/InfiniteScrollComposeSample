@@ -1,4 +1,4 @@
-package com.example.neugelb.autocomplete.autocomplete
+package com.example.neugelb.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi

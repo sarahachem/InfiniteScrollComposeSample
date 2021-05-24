@@ -21,7 +21,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import com.example.neugelb.autocomplete.autocomplete.AutoCompleteBox
 import com.example.neugelb.compose.component.input.TextInputField
 import com.example.neugelb.compose.component.text.ContentText
 import com.example.neugelb.compose.theme.NeugelbTheme
