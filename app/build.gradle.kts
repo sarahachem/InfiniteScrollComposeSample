@@ -44,6 +44,9 @@ android {
         exclude("META-INF/AL2.0")
         exclude("META-INF/LGPL2.1")
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -66,8 +69,17 @@ dependencies {
     implementation("com.google.accompanist:accompanist-insets:0.8.1")
     implementation("com.google.accompanist:accompanist-swiperefresh:0.8.1")
     implementation("joda-time:joda-time:2.9.9")
+    implementation("androidx.arch.core:core-testing:2.1.0")
 
     testImplementation("junit:junit:4.+")
+    testImplementation("org.mockito:mockito-core:3.7.0")
+    testImplementation("org.mockito:mockito-inline:2.13.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.3")
+
+
+    testImplementation("org.powermock:powermock-module-junit4:2.0.9")
+    testImplementation("org.powermock:powermock-api-mockito2:2.0.9")
+    testImplementation("org.mockito:mockito-core:3.7.0")
 }
 
 fun loadCustomProperties(file: File): java.util.Properties {

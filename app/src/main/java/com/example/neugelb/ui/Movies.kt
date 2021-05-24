@@ -61,13 +61,11 @@ fun Movies(
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         SwipeRefresh(
             state = rememberSwipeRefreshState(false),
-            onRefresh = { viewModel.refresh() },
+            onRefresh = { scope.launch { viewModel.refresh() } },
         ) {
             LazyColumn(
                 state = state,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = FiftySixDp),
+                modifier = Modifier.fillMaxSize().padding(top = FiftySixDp),
                 contentPadding = LocalWindowInsets.current.navigationBars.toPaddingValues()
             ) {
                 val groupedMovies = actualMovies?.groupBy { it.releaseDate }
@@ -88,11 +86,7 @@ fun Movies(
                                         viewModel.isLoadingInfo(true)
                                         actualMovies.takeIf { it.indexOf(item) < it.lastIndex }
                                             ?.let {
-                                                state.animateScrollToItem(
-                                                    it.indexOf(item) + groupedMovies.keys.indexOf(
-                                                        date
-                                                    ) + 1
-                                                )
+                                                state.animateScrollToItem(it.indexOf(item) + groupedMovies.keys.indexOf(date) + 1)
                                             }
                                         viewModel.onMovieClicked(item)
                                         bottomSheetState.show()
@@ -102,7 +96,7 @@ fun Movies(
                         )
                         //to add the days grouped in previews map entries
                         if (movies?.lastIndex == movies?.indexOf(item)) {
-                            viewModel.fetchMovies()
+                            scope.launch { viewModel.fetchMovies() }
                         }
                     }
                 }
@@ -118,9 +112,7 @@ fun Movies(
             )
         }
         if (shouldScrollUp == true && actualMovies?.isNotEmpty() == true && state.isScrollInProgress.not()) {
-            scope.launch {
-                state.animateScrollToItem(0)
-            }
+            scope.launch { state.animateScrollToItem(0) }
             viewModel.shouldScrollUpLiveData.postValue(false)
         }
     }

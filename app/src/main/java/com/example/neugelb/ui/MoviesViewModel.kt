@@ -1,24 +1,24 @@
 package com.example.neugelb.ui
 
 import android.app.Application
-import android.content.Context
 import android.net.ConnectivityManager
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
-import com.example.neugelb.apis.ApiBuilders
 import com.example.neugelb.BuildConfig
+import com.example.neugelb.apis.TMDBApi
 import com.example.neugelb.apis.checkSuccessful
 import com.example.neugelb.model.InfoAndCredits
 import com.example.neugelb.model.MovieResult
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MoviesViewModel(
-    private val app: Application,
+    app: Application,
+    private val tmdbApi: TMDBApi,
+    private val connectivityManager: ConnectivityManager
 ) : AndroidViewModel(app) {
 
     var errorLiveData = mutableLiveDataOf("")
@@ -31,56 +31,44 @@ class MoviesViewModel(
     var totalNumberOfPages = 1
     val movieCreditsAndInfoLiveData = mutableLiveDataOf<InfoAndCredits?>(null)
 
-    init {
-        fetchMovies()
-    }
-
-    fun refresh() {
+    suspend fun refresh() {
         moviesLiveData = mutableLiveDataOf(emptyList())
         currentPage = 0
         totalNumberOfPages = 1
         fetchMovies()
     }
 
-    fun fetchMovies() {
+    suspend fun fetchMovies() {
         val movies = moviesLiveData.value?.toMutableList() ?: mutableListOf()
-        viewModelScope.launch(Dispatchers.IO) {
-            if (currentPage < totalNumberOfPages) {
-                withContext(Dispatchers.IO) {
-                    if (hasInternetConnection()) {
-                        if (currentPage == 0) {
-                            isLoadingMoviesLiveData.postValue(true)
+        if (currentPage < totalNumberOfPages) {
+            withContext(Dispatchers.IO) {
+                if (hasInternetConnection()) {
+                    if (currentPage == 0) isLoadingMoviesLiveData.postValue(true)
+                    kotlin.runCatching {
+                        tmdbApi.getMovies(BuildConfig.TMDB_API_KEY, currentPage + 1).execute().checkSuccessful()
+                    }.onFailure {
+                        errorLiveData.postValue(it.message)
+                    }.onSuccess {
+                        val reponse = it.body()
+                        totalNumberOfPages = reponse?.totalPages ?: 1
+                        currentPage = reponse?.page ?: 0
+                        reponse?.results?.let { newMovies ->
+                            movies.addAll(newMovies)
+                            moviesLiveData.postValue(movies)
                         }
-                        kotlin.runCatching {
-                            ApiBuilders.getTMDBApi().getMovies(
-                                BuildConfig.TMDB_API_KEY, currentPage + 1
-                            ).execute().checkSuccessful()
-                        }.onFailure {
-                            errorLiveData.postValue(it.message)
-                        }.onSuccess {
-                            totalNumberOfPages = it.body()?.totalPages ?: 1
-                            currentPage = it.body()?.page ?: 0
-                            it.body()?.results?.let { newMovies ->
-                                movies.addAll(newMovies)
-                                moviesLiveData.postValue(movies)
-                            }
-                        }
-                    } else {
-                        errorLiveData.postValue(" No internet connection")
                     }
+                } else {
+                    errorLiveData.postValue(" No internet connection")
                 }
             }
-            if (isLoadingMoviesLiveData.value == true) {
-                isLoadingMoviesLiveData.postValue(false)
-            }
+        }
+        if (isLoadingMoviesLiveData.value == true) {
+            isLoadingMoviesLiveData.postValue(false)
         }
     }
 
-    private fun hasInternetConnection(): Boolean {
-        val activeNetwork =
-            (app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).activeNetworkInfo
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting;
-    }
+    @VisibleForTesting
+    fun hasInternetConnection() = connectivityManager.activeNetwork != null
 
     suspend fun onMovieClicked(movieEntry: MovieResult) {
         if (hasInternetConnection()) {
@@ -101,7 +89,7 @@ class MoviesViewModel(
     private suspend fun getMovieInfoAndCredits(movieEntry: MovieResult) {
         withContext(Dispatchers.IO) {
             kotlin.runCatching {
-                ApiBuilders.getTMDBApi()
+                tmdbApi
                     .getMovieInfoAndCredits(movieEntry.id, BuildConfig.TMDB_API_KEY)
                     .execute().checkSuccessful()
             }.onFailure {
@@ -134,11 +122,13 @@ class MoviesViewModel(
 }
 
 class MoviesViewModelFactory(
-    private val app: Application
+    private val app: Application,
+    private val tmdbApi: TMDBApi,
+    private val connectivityManager: ConnectivityManager
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return (MoviesViewModel(app) as T)
+        return (MoviesViewModel(app, tmdbApi, connectivityManager) as T)
     }
 }
 

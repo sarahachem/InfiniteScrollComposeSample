@@ -1,8 +1,9 @@
 package com.example.neugelb
 
+import android.content.Context
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -12,12 +13,13 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.example.neugelb.apis.ApiBuilders
 import com.example.neugelb.compose.templates.MainLayoutWithBottomSheet
 import com.example.neugelb.compose.theme.NeugelbTheme
 import com.example.neugelb.ui.MovieInfoBottomSheet
@@ -26,7 +28,6 @@ import com.example.neugelb.ui.MoviesViewModelFactory
 import com.example.neugelb.ui.Movies
 import com.google.accompanist.insets.ExperimentalAnimatedInsets
 import com.google.accompanist.insets.ProvideWindowInsets
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -59,7 +60,9 @@ class MainActivity : AppCompatActivity() {
                             scope.launch {
                                 when {
                                     bottomSheetState.isVisible -> scope.launch { bottomSheetState.hide() }
-                                    listState.firstVisibleItemIndex > 1 -> listState.animateScrollToItem(0)
+                                    listState.firstVisibleItemIndex > 1 -> listState.animateScrollToItem(
+                                        0
+                                    )
                                     else -> finish()
                                 }
                             }
@@ -69,10 +72,16 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        lifecycleScope.launch {
+            viewModel.fetchMovies()
+        }
     }
 
     private fun initViewModel() {
-        val factory = MoviesViewModelFactory(application)
+        val factory = MoviesViewModelFactory(
+            application, ApiBuilders.getTMDBApi(),
+            (this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+        )
         viewModel = ViewModelProvider(this, factory).get(MoviesViewModel::class.java)
         viewModel.errorLiveData.observe(this) {
             it?.takeIf { it.isNotEmpty() }?.let { error ->
