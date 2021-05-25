@@ -30,6 +30,7 @@ class MoviesViewModel(
     var currentPage = 0
     var totalNumberOfPages = 1
     val movieCreditsAndInfoLiveData = mutableLiveDataOf<InfoAndCredits?>(null)
+    val playTrailerLiveData = mutableLiveDataOf<String?>(null)
 
     suspend fun refresh() {
         moviesLiveData = mutableLiveDataOf(emptyList())
@@ -45,7 +46,8 @@ class MoviesViewModel(
                 if (hasInternetConnection()) {
                     if (currentPage == 0) isLoadingMoviesLiveData.postValue(true)
                     kotlin.runCatching {
-                        tmdbApi.getMovies(BuildConfig.TMDB_API_KEY, currentPage + 1).execute().checkSuccessful()
+                        tmdbApi.getMovies(BuildConfig.TMDB_API_KEY, currentPage + 1).execute()
+                            .checkSuccessful()
                     }.onFailure {
                         errorLiveData.postValue(it.message)
                     }.onSuccess {
@@ -119,6 +121,11 @@ class MoviesViewModel(
         if (hasInternetConnection()) isLoadingMovieInfoLiveData.postValue(isLoading)
         else isLoadingMovieInfoLiveData.postValue(false)
     }
+
+    fun playTrailer(key: String) {
+        //only youtube videos are supposed
+        playTrailerLiveData.postValue(key.toYoutubeLink())
+    }
 }
 
 class MoviesViewModelFactory(
@@ -134,3 +141,7 @@ class MoviesViewModelFactory(
 
 fun <T> mutableLiveDataOf(value: T): MutableLiveData<T> =
     MutableLiveData<T>().apply { this.value = value }
+
+private fun String.toYoutubeLink(): String {
+    return "https://youtube.com/watch?v=$this"
+}

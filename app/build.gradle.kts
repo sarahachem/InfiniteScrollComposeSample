@@ -56,6 +56,7 @@ dependencies {
     implementation("androidx.compose.compiler:compiler:1.0.0-beta05")
     implementation("androidx.compose.runtime:runtime:1.0.0-beta05")
     implementation("androidx.compose.runtime:runtime-livedata:1.0.0-beta05")
+    implementation("androidx.compose.ui:ui-viewbinding:1.0.0-beta05")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha04")
     implementation("androidx.compose.foundation:foundation:1.0.0-beta05")
     implementation("androidx.compose.material:material:1.0.0-beta05")
@@ -71,11 +72,17 @@ dependencies {
     implementation("joda-time:joda-time:2.9.9")
     implementation("androidx.arch.core:core-testing:2.1.0")
 
+    implementation("com.google.android.exoplayer:exoplayer-core:2.14.0")
+    implementation("com.google.android.exoplayer:exoplayer-ui:2.14.0")
+    implementation("com.google.android.exoplayer:exoplayer-smoothstreaming:2.14.0")
+    implementation("com.google.android.exoplayer:exoplayer-dash:2.14.0")
+    implementation("com.github.HaarigerHarald:android-youtubeExtractor:master-SNAPSHOT")
+
+
     testImplementation("junit:junit:4.+")
     testImplementation("org.mockito:mockito-core:3.7.0")
     testImplementation("org.mockito:mockito-inline:2.13.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.3")
-
 
     testImplementation("org.powermock:powermock-module-junit4:2.0.9")
     testImplementation("org.powermock:powermock-api-mockito2:2.0.9")

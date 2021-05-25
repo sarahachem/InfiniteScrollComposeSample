@@ -9,17 +9,29 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.neugelb.apis.ApiBuilders
+import com.example.neugelb.compose.component.VideoPlayer
 import com.example.neugelb.compose.templates.MainLayoutWithBottomSheet
 import com.example.neugelb.compose.theme.NeugelbTheme
 import com.example.neugelb.ui.MovieInfoBottomSheet
@@ -47,18 +59,22 @@ class MainActivity : AppCompatActivity() {
                 val scope = rememberCoroutineScope()
                 val listState = rememberLazyListState()
                 val movieInfo by viewModel.movieCreditsAndInfoLiveData.observeAsState()
+                val playTrailer by viewModel.playTrailerLiveData.observeAsState()
                 val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
                 ProvideWindowInsets(windowInsetsAnimationsEnabled = true) {
                     MainLayoutWithBottomSheet(
                         onBackPressedDispatcherOwner = this@MainActivity,
                         sheetState = bottomSheetState,
                         sheetContent = {
-                            MovieInfoBottomSheet(info = movieInfo)
+                            MovieInfoBottomSheet(info = movieInfo, viewModel)
                         }
                     ) {
                         BackHandler {
                             scope.launch {
                                 when {
+                                    playTrailer != null -> viewModel.playTrailerLiveData.postValue(
+                                        null
+                                    )
                                     bottomSheetState.isVisible -> scope.launch { bottomSheetState.hide() }
                                     listState.firstVisibleItemIndex > 1 -> listState.animateScrollToItem(
                                         0
@@ -68,6 +84,30 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                         Movies(bottomSheetState, scope, listState, viewModel)
+                        playTrailer?.let {
+                            Popup(
+                                alignment = Alignment.Center,
+                                onDismissRequest = {
+                                    viewModel.playTrailerLiveData.postValue(null)
+                                },
+                                properties = PopupProperties(
+                                    dismissOnBackPress = true,
+                                    dismissOnClickOutside = true
+                                )
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .aspectRatio(1f)
+                                        .background(
+                                            color = MaterialTheme.colors.background,
+                                            shape = RoundedCornerShape(16.dp)
+                                        ), contentAlignment = Alignment.Center
+                                ) {
+                                    VideoPlayer(uri = it, viewModel)
+                                }
+                            }
+                        }
                     }
                 }
             }

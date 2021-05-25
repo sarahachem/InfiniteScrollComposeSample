@@ -50,27 +50,26 @@ fun LabelIconCell(
 
 @Composable
 fun LabelValueCell(
+    topDivider: Boolean = false,
     modifier: Modifier = Modifier,
     labelText: String,
-    valueText: String? = null,
-    bottomDivider: Boolean = false,
+    valueText: String? = null
 ) {
     CellLayout(
+        topDivider = topDivider,
         modifier = modifier,
         label = { BodyText(modifier = modifier, text = labelText, textAlign = TextAlign.Start) },
-        value = { valueText?.let { SecondaryText(text = valueText, textAlign = TextAlign.Start) } },
-        bottomDivider = bottomDivider,
+        value = { valueText?.let { SecondaryText(text = valueText, textAlign = TextAlign.Start) } }
     )
 }
 
-
 @Composable
 private fun CellLayout(
+    topDivider: Boolean,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     label: @Composable () -> Unit,
-    value: (@Composable () -> Unit)? = null,
-    bottomDivider: Boolean = false,
+    value: (@Composable () -> Unit)? = null
 ) {
     Column(
         Modifier
@@ -78,11 +77,11 @@ private fun CellLayout(
             .clickable(enabled = onClick != null, onClick = { onClick?.invoke() })
             .then(modifier)
     ) {
+        if (topDivider) Divider(color = NeugelbTheme.colors.divider)
         Content(
             label = label,
             value = value,
         )
-        if (bottomDivider) Divider(color = NeugelbTheme.colors.divider)
     }
 }
 
@@ -138,12 +137,11 @@ fun SampleLabelValueCell(@PreviewParameter(DarkThemePreviewParamProvider::class)
             LabelValueCell(
                 labelText = "I'm the first label",
                 valueText = "I'm the first text",
-                bottomDivider = true
             )
             LabelValueCell(
                 labelText = "I'm the second label",
                 valueText = "I'm the second text",
-                bottomDivider = true
+                topDivider = true
             )
         }
     }
