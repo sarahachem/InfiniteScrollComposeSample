@@ -16,8 +16,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -104,7 +108,22 @@ class MainActivity : AppCompatActivity() {
                                             shape = RoundedCornerShape(16.dp)
                                         ), contentAlignment = Alignment.Center
                                 ) {
+                                    //TODO: add loading when preparing video
                                     VideoPlayer(uri = it, viewModel)
+                                    IconButton(
+                                        modifier = Modifier.align(Alignment.TopEnd),
+                                        onClick = {
+                                            viewModel.playTrailerLiveData.postValue(
+                                                null
+                                            )
+                                        }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Clear,
+                                            contentDescription = "Clear",
+                                            tint = NeugelbTheme.colors.textPlaceholder
+                                        )
+
+                                    }
                                 }
                             }
                         }

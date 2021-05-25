@@ -69,6 +69,7 @@ class MoviesViewModel(
         }
     }
 
+    //TODO: post live data to stop if in the middle of loading
     @VisibleForTesting
     fun hasInternetConnection() = connectivityManager.activeNetwork != null
 
@@ -123,7 +124,7 @@ class MoviesViewModel(
     }
 
     fun playTrailer(key: String) {
-        //only youtube videos are supposed
+        //only youtube videos are supported for now
         playTrailerLiveData.postValue(key.toYoutubeLink())
     }
 }

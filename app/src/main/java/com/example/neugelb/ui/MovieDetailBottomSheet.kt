@@ -26,7 +26,6 @@ import com.example.neugelb.compose.theme.NeugelbTheme
 import com.example.neugelb.compose.theme.TwelveDp
 import com.example.neugelb.compose.theme.TwentyFourDp
 import com.example.neugelb.model.InfoAndCredits
-import com.example.neugelb.model.Videos
 import java.util.Locale
 
 const val DIRECTOR_TITLE: String = "Director"
