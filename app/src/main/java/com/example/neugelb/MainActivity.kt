@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -87,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                         playTrailer?.let {
                             Popup(
                                 alignment = Alignment.Center,
-                                onDismissRequest = {removeTrailer()},
+                                onDismissRequest = { removeTrailer() },
                                 properties = PopupProperties(
                                     dismissOnBackPress = true,
                                     dismissOnClickOutside = true

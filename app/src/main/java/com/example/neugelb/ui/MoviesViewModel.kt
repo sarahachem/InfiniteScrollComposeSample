@@ -14,6 +14,7 @@ import com.example.neugelb.model.InfoAndCredits
 import com.example.neugelb.model.MovieResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.net.SocketTimeoutException
 
 class MoviesViewModel(
     app: Application,
@@ -40,52 +41,62 @@ class MoviesViewModel(
     }
 
     suspend fun fetchMovies() {
-        val movies = moviesLiveData.value?.toMutableList() ?: mutableListOf()
-        if (currentPage < totalNumberOfPages) {
-            withContext(Dispatchers.IO) {
-                if (hasInternetConnection()) {
-                    if (currentPage == 0) isLoadingMoviesLiveData.postValue(true)
-                    kotlin.runCatching {
-                        tmdbApi.getMovies(BuildConfig.TMDB_API_KEY, currentPage + 1).execute()
-                            .checkSuccessful()
-                    }.onFailure {
-                        errorLiveData.postValue(it.message)
-                    }.onSuccess {
-                        val reponse = it.body()
-                        totalNumberOfPages = reponse?.totalPages ?: 1
-                        currentPage = reponse?.page ?: 0
-                        reponse?.results?.let { newMovies ->
-                            movies.addAll(newMovies)
-                            moviesLiveData.postValue(movies)
-                        }
+        try {
+            val movies = moviesLiveData.value?.toMutableList() ?: mutableListOf()
+            if (currentPage < totalNumberOfPages) {
+                withContext(Dispatchers.IO) {
+                    if (hasInternetConnection()) {
+                        if (currentPage == 0) isLoadingMoviesLiveData.postValue(true)
+                        tryToGetLatestMovies(movies)
+                    } else {
+                        errorLiveData.postValue("No internet connection")
                     }
-                } else {
-                    errorLiveData.postValue(" No internet connection")
                 }
             }
+        } catch (e: SocketTimeoutException) {
+            onConnectionTimeout()
         }
         if (isLoadingMoviesLiveData.value == true) {
             isLoadingMoviesLiveData.postValue(false)
         }
     }
 
-    //TODO: post live data to stop if in the middle of loading
+    private fun tryToGetLatestMovies(movies: MutableList<MovieResult>) {
+        kotlin.runCatching {
+            tmdbApi.getMovies(BuildConfig.TMDB_API_KEY, currentPage + 1).execute().checkSuccessful()
+        }.onFailure {
+            errorLiveData.postValue(it.message)
+        }.onSuccess {
+            val response = it.body()
+            totalNumberOfPages = response?.totalPages ?: 1
+            currentPage = response?.page ?: 0
+            response?.results?.let { newMovies ->
+                movies.addAll(newMovies)
+                moviesLiveData.postValue(movies)
+            }
+        }
+    }
+
     @VisibleForTesting
     fun hasInternetConnection() = connectivityManager.activeNetwork != null
 
     suspend fun onMovieClicked(movieEntry: MovieResult) {
-        if (hasInternetConnection()) {
-            kotlin.runCatching {
-                getMovieInfoAndCredits(movieEntry)
-            }.onSuccess {
-                isLoadingMovieInfoLiveData.postValue(false)
-            }.onFailure {
-                isLoadingMovieInfoLiveData.postValue(false)
-                errorLiveData.postValue(it.message)
+        try {
+            if (hasInternetConnection()) {
+                kotlin.runCatching {
+                    getMovieInfoAndCredits(movieEntry)
+                }.onSuccess {
+                    isLoadingMovieInfoLiveData.postValue(false)
+                }.onFailure {
+                    isLoadingMovieInfoLiveData.postValue(false)
+                    errorLiveData.postValue(it.message)
+                }
+            } else {
+                movieCreditsAndInfoLiveData.postValue(null)
+                errorLiveData.postValue("no internet connection")
             }
-        } else {
-            movieCreditsAndInfoLiveData.postValue(null)
-            errorLiveData.postValue("no internet connection")
+        } catch (e: SocketTimeoutException) {
+            onConnectionTimeout()
         }
     }
 
@@ -126,6 +137,12 @@ class MoviesViewModel(
     fun playTrailer(key: String) {
         //only youtube videos are supported for now
         playTrailerLiveData.postValue(key.toYoutubeLink())
+    }
+
+    private fun onConnectionTimeout() {
+        errorLiveData.postValue("Connection timeout")
+        isLoadingMovieInfoLiveData.postValue(null)
+        isLoadingMoviesLiveData.postValue(null)
     }
 }
 
