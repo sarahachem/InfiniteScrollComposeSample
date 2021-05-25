@@ -110,17 +110,16 @@ fun MovieInfoBottomSheet(
             }
             info.firstYoutubeVideo()?.let {
                 LabelIconCell(
+                    clickable = true,
+                    onClick = {
+                        viewModel.playTrailer(it.key)
+                    },
                     icon = {
-                        IconButton(
-                            onClick = {
-                                viewModel.playTrailer(it.key)
-                            }) {
-                            Icon(
-                                imageVector = Icons.Filled.PlayArrow,
-                                contentDescription = "Play",
-                                tint = NeugelbTheme.colors.textPlaceholder
-                            )
-                        }
+                        Icon(
+                            imageVector = Icons.Filled.PlayArrow,
+                            contentDescription = "Play",
+                            tint = NeugelbTheme.colors.textPlaceholder
+                        )
                     },
                     textAlign = TextAlign.Center,
                     modifier = Modifier

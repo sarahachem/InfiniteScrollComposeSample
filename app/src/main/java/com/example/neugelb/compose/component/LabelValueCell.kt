@@ -34,12 +34,16 @@ fun LabelIconCell(
     icon: (@Composable () -> Unit)? = null,
     textAlign: TextAlign? = null,
     text: String,
-    color: Color = NeugelbTheme.colors.textSecondary
+    color: Color = NeugelbTheme.colors.textSecondary,
+    clickable: Boolean = false,
+    onClick: (() -> Unit) = {}
 ) {
     Row(
         modifier = modifier
             .fillMaxHeight()
-            .padding(horizontal = FourDp), verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = FourDp)
+            .clickable(enabled = clickable, onClick = onClick),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         icon?.let {
             icon()
