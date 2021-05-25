@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
                                             shape = RoundedCornerShape(16.dp)
                                         ), contentAlignment = Alignment.Center
                                 ) {
-                                    //TODO: add loading when preparing video
+                                    //TODO: add loading when preparing video and fullscreen option.
                                     VideoPlayer(uri = it, viewModel)
                                     IconButton(
                                         modifier = Modifier.align(Alignment.TopEnd),
