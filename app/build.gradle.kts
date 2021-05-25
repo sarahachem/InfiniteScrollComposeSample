@@ -74,7 +74,6 @@ dependencies {
 
     implementation("com.google.android.exoplayer:exoplayer-core:2.14.0")
     implementation("com.google.android.exoplayer:exoplayer-ui:2.14.0")
-    implementation("com.google.android.exoplayer:exoplayer-smoothstreaming:2.14.0")
     implementation("com.google.android.exoplayer:exoplayer-dash:2.14.0")
     implementation("com.github.HaarigerHarald:android-youtubeExtractor:master-SNAPSHOT")
 
@@ -83,10 +82,6 @@ dependencies {
     testImplementation("org.mockito:mockito-core:3.7.0")
     testImplementation("org.mockito:mockito-inline:2.13.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.3")
-
-    testImplementation("org.powermock:powermock-module-junit4:2.0.9")
-    testImplementation("org.powermock:powermock-api-mockito2:2.0.9")
-    testImplementation("org.mockito:mockito-core:3.7.0")
 }
 
 fun loadCustomProperties(file: File): java.util.Properties {
