@@ -76,13 +76,9 @@ class MainActivity : AppCompatActivity() {
                         BackHandler {
                             scope.launch {
                                 when {
-                                    playTrailer != null -> viewModel.playTrailerLiveData.postValue(
-                                        null
-                                    )
+                                    playTrailer != null -> removeTrailer()
                                     bottomSheetState.isVisible -> scope.launch { bottomSheetState.hide() }
-                                    listState.firstVisibleItemIndex > 1 -> listState.animateScrollToItem(
-                                        0
-                                    )
+                                    listState.firstVisibleItemIndex > 1 -> listState.animateScrollToItem(0)
                                     else -> finish()
                                 }
                             }
@@ -91,9 +87,7 @@ class MainActivity : AppCompatActivity() {
                         playTrailer?.let {
                             Popup(
                                 alignment = Alignment.Center,
-                                onDismissRequest = {
-                                    viewModel.playTrailerLiveData.postValue(null)
-                                },
+                                onDismissRequest = {removeTrailer()},
                                 properties = PopupProperties(
                                     dismissOnBackPress = true,
                                     dismissOnClickOutside = true
@@ -104,7 +98,7 @@ class MainActivity : AppCompatActivity() {
                                         .fillMaxWidth()
                                         .aspectRatio(1f)
                                         .background(
-                                            color = MaterialTheme.colors.background,
+                                            color = NeugelbTheme.colors.playerBackground,
                                             shape = RoundedCornerShape(16.dp)
                                         ), contentAlignment = Alignment.Center
                                 ) {
@@ -113,9 +107,7 @@ class MainActivity : AppCompatActivity() {
                                     IconButton(
                                         modifier = Modifier.align(Alignment.TopEnd),
                                         onClick = {
-                                            viewModel.playTrailerLiveData.postValue(
-                                                null
-                                            )
+                                            removeTrailer()
                                         }) {
                                         Icon(
                                             imageVector = Icons.Filled.Clear,
@@ -147,5 +139,9 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, error, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun removeTrailer() {
+        viewModel.playTrailerLiveData.postValue(null)
     }
 }

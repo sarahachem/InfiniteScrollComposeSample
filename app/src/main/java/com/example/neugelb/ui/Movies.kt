@@ -65,8 +65,7 @@ fun Movies(
         ) {
             LazyColumn(
                 state = state,
-                modifier = Modifier.fillMaxSize().padding(top = FiftySixDp),
-                contentPadding = LocalWindowInsets.current.navigationBars.toPaddingValues()
+                modifier = Modifier.fillMaxSize().padding(top = FiftySixDp)
             ) {
                 val groupedMovies = actualMovies?.groupBy { it.releaseDate }
                 groupedMovies?.forEach { (date, movie) ->

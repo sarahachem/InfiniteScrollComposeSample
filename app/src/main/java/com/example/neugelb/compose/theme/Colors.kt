@@ -18,6 +18,7 @@ internal object ThemeColorAlias {
     val divider = ThemedColor(light = ColorAlias.veryLightGrey, dark = ColorAlias.grey)
     val theme = ThemedColor(light = ColorAlias.cyan, dark = ColorAlias.cyan)
     val iconMain = ThemedColor(light = ColorAlias.lightblue, dark = ColorAlias.lightblue)
+    val playerBackground = ThemedColor(light = ColorAlias.black, dark = ColorAlias.black)
 }
 
 private object ColorAlias {
