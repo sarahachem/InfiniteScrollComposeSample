@@ -33,13 +33,6 @@ class MoviesViewModel(
     val movieCreditsAndInfoLiveData = mutableLiveDataOf<InfoAndCredits?>(null)
     val playTrailerLiveData = mutableLiveDataOf<String?>(null)
 
-    suspend fun refresh() {
-        moviesLiveData = mutableLiveDataOf(emptyList())
-        currentPage = 0
-        totalNumberOfPages = 1
-        fetchMovies()
-    }
-
     suspend fun fetchMovies() {
         try {
             val movies = moviesLiveData.value?.toMutableList() ?: mutableListOf()
@@ -77,9 +70,6 @@ class MoviesViewModel(
         }
     }
 
-    @VisibleForTesting
-    fun hasInternetConnection() = connectivityManager.activeNetwork != null
-
     suspend fun onMovieClicked(movieEntry: MovieResult) {
         try {
             if (hasInternetConnection()) {
@@ -114,6 +104,13 @@ class MoviesViewModel(
         }
     }
 
+    suspend fun refresh() {
+        moviesLiveData = mutableLiveDataOf(emptyList())
+        currentPage = 0
+        totalNumberOfPages = 1
+        fetchMovies()
+    }
+
     fun filter(query: String?) {
         foundItemsLiveData.postValue(null)
         shouldScrollUpLiveData.postValue(true)
@@ -138,6 +135,9 @@ class MoviesViewModel(
         //only youtube videos are supported for now
         playTrailerLiveData.postValue(key.toYoutubeLink())
     }
+
+    @VisibleForTesting
+    private fun hasInternetConnection() = connectivityManager.activeNetwork != null
 
     private fun onConnectionTimeout() {
         errorLiveData.postValue("Connection timeout")
