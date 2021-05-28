@@ -12,4 +12,4 @@ Enjoy!
 Coming:
 - Lastest series
 - Filter by category
-- account creation
+- Account creation
