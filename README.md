@@ -7,3 +7,9 @@ features:
 
 Just download the app and compile! but make sure you have Android Api 28+
 Enjoy! 
+
+
+Coming:
+- Lastest series
+- Filter by category
+- account creation
