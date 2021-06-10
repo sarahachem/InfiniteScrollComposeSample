@@ -14,6 +14,7 @@ const val POSTER_PATH_URL_API = "https://www.themoviedb.org/t/p/w780/"
 
 interface TMDBApi {
 
+    //TODO use retrofit coroutines
     @GET("/3/discover/movie?sort_by=primary_release_date.desc&include_adult=false&include_video=false&with_watch_monetization_types=flatrate")
     fun getMovies(
         @Query("api_key") apiKey: String,
@@ -23,6 +24,7 @@ interface TMDBApi {
         )
     ): Call<MoviesResponse>
 
+    //TODO use retrofit coroutines
     @GET("/3/movie/{id}")
     fun getMovieInfoAndCredits(
         @Path("id") id: Int,
